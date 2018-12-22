@@ -17,12 +17,14 @@ int main(void){
 	srand(clock());
 	//Initializing VRAM and BGCNT
 	graphics_init();
-	//initializing sprite
-	graphics_init_sprite();
 	//setting up BG1
 	graphics_setup_BG1();
 	//setting up BG2
 	graphics_setup_BG2();
+	//setting up BG0
+	graphics_setup_BG0();
+	//initializing sprite
+	graphics_init_sprite();
 	//setting up timers
 	timer_setup(&graphics_shift_main, &graphics_shift_back, &graphics_shift_sprite);
 

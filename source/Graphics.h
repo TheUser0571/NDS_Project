@@ -18,6 +18,8 @@ void graphics_init(void);
 
 void graphics_init_sprite(void);
 
+void graphics_setup_BG0(void);
+
 void graphics_setup_BG1(void);
 
 void graphics_setup_BG2(void);

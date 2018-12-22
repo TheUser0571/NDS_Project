@@ -28,10 +28,11 @@ int cat_rot = 1;
 //initial graphic to display for graphic
 int cat_state=1;
 //map pointers
-u16* mainMap;
-u16* backMap;
+u16* mainMap, *backMap, *obstMap;
+//tiles pointers
+u16* backTiles, *mainTiles, *obstTiles;
 //sprite graphics pointers
-u16* gfx1, *gfx2, *gfx3, *gfx_active;
+u16* gfx1=NULL, *gfx2=NULL, *gfx3=NULL, *gfx_active=NULL;
 int gfx_cnt=0;
 //definition of tile numbers
 enum TileNum{Transp, Floor, Gray, AC};
@@ -69,23 +70,32 @@ void graphics_build(enum OBSTACLE_TYPE obstacle, int row, int index);
 void graphics_init(void){
 	//Enable VRAM
 	VRAM_A_CR = VRAM_ENABLE| VRAM_A_MAIN_BG;
+	//VRAM B for sprite
+	VRAM_B_CR = VRAM_ENABLE|VRAM_B_MAIN_SPRITE_0x06400000;
 
 	//Set mode and background
-	REG_DISPCNT = MODE_3_2D|DISPLAY_BG1_ACTIVE|DISPLAY_BG2_ACTIVE;
+	REG_DISPCNT = MODE_3_2D|DISPLAY_BG0_ACTIVE|DISPLAY_BG1_ACTIVE|DISPLAY_BG2_ACTIVE;
 
 	//initializing BG control
 	BGCTRL[1] = BG_32x64|BG_COLOR_16|BG_MAP_BASE(0)|BG_TILE_BASE(1);
 	BGCTRL[2] = BG_32x64|BG_COLOR_16|BG_MAP_BASE(2)|BG_TILE_BASE(2);
+	BGCTRL[0] = BG_32x64|BG_COLOR_16|BG_MAP_BASE(4)|BG_TILE_BASE(3);
 
 	//setting map pointers
 	mainMap = BG_MAP_RAM(0);
 	backMap = BG_MAP_RAM(2);
+	obstMap = BG_MAP_RAM(4);
+
+	//setting tile pointers
+	mainTiles = BG_TILE_RAM(1);
+	backTiles = BG_TILE_RAM(2);
+	obstTiles = BG_TILE_RAM(3);
 
 }
 
 void graphics_init_sprite(void){
-	//VRAM B for sprite
-	VRAM_B_CR = VRAM_ENABLE|VRAM_B_MAIN_SPRITE_0x06400000;
+
+	oamInit(&oamMain, SpriteMapping_1D_32, false);
 
 	//allocating memory for sprite graphics
 	gfx1 = oamAllocateGfx(&oamMain, SpriteSize_32x32, SpriteColorFormat_256Color);
@@ -95,11 +105,11 @@ void graphics_init_sprite(void){
 	//copying palette and tiles
 	dmaCopy(NyanCat1Pal,SPRITE_PALETTE,NyanCat1PalLen);
 	dmaCopy(NyanCat1Tiles,gfx1,NyanCat1TilesLen);
-	dmaCopy(NyanCat2Tiles,gfx2,NyanCat1TilesLen);
+	dmaCopy(NyanCat2Tiles,gfx2,NyanCat2TilesLen);
 	dmaCopy(NyanCat3Tiles,gfx3,NyanCat3TilesLen);
 
 	//initializing sprite
-	oamInit(&oamMain, SpriteMapping_1D_32, false);
+
 	oamSet(	&oamMain,//oam handler
 			0,//Number of sprite
 			x_pos_sprite, y_pos_sprite,//Coordinates
@@ -115,12 +125,12 @@ void graphics_init_sprite(void){
 			false);//Mosaic
 	oamUpdate(&oamMain);
 }
-
+//setting up background
 void graphics_setup_BG1(void){
 	//copying palette, tiles and map
 	dmaCopy(cloudsPal, BG_PALETTE, cloudsPalLen);
 	dmaCopy(cloudsMap,backMap,cloudsMapLen);
-	dmaCopy(cloudsTiles, BG_TILE_RAM(2), cloudsTilesLen);
+	dmaCopy(cloudsTiles, backTiles, cloudsTilesLen);
 	//dmaCopy(cloudsMap,&backMap[32*32],cloudsMapLen);
 
 	//bottom half of BG is the switched image of top half
@@ -131,20 +141,38 @@ void graphics_setup_BG1(void){
 		}
 	}
 }
-
+//setting up buildings
 void graphics_setup_BG2(void){
 	//setting custop colors
 	BG_PALETTE[0xfe]=ARGB16(1,15,15,15);
 	BG_PALETTE[0xff]=ARGB16(1,0,0,0);
 
 	//coping custom tiles into memory
-	dmaCopy(FullTileTransp,&BG_TILE_RAM(1)[Transp*TILE_OFFSET],32);
-	dmaCopy(GrayTile,&BG_TILE_RAM(1)[Gray*TILE_OFFSET],32);
-	dmaCopy(FloorTile,&BG_TILE_RAM(1)[Floor*TILE_OFFSET],32);
+	dmaCopy(FullTileTransp,&mainTiles[Transp*TILE_OFFSET],32);
+	dmaCopy(GrayTile,&mainTiles[Gray*TILE_OFFSET],32);
+	dmaCopy(FloorTile,&mainTiles[Floor*TILE_OFFSET],32);
+
+	int row, col;
+	for(row=0;row<64;row++){
+		for(col=0;col<32;col++){
+			if(col==0 || col==31){
+				mainMap[row*32+col]=Gray|WALL_PAL;
+			}
+			if(col==1){
+				mainMap[row*32+col]=Floor|WALL_PAL;
+			}
+			if(col==30){
+				mainMap[row*32+col]=Floor|TILE_FLIP_H|WALL_PAL;
+			}
+		}
+	}
+}
+
+void graphics_setup_BG0(void){
 
 	//copying tiles and palette of AC
 	//TODO: change this to balcony
-	dmaCopy(ACTiles,&BG_TILE_RAM(1)[AC*TILE_OFFSET],ACTilesLen);
+	dmaCopy(ACTiles,&obstTiles[AC*TILE_OFFSET],ACTilesLen);
 	dmaCopy(ACPal,&BG_PALETTE[0xe0],ACPalLen);
 
 	//designing initial map
@@ -175,6 +203,7 @@ void graphics_setup_BG2(void){
 			graphics_build(NO_OBST, row, index);
 		}
 	}
+
 }
 
 void graphics_build(enum OBSTACLE_TYPE obstacle, int row, int index){
@@ -182,58 +211,30 @@ void graphics_build(enum OBSTACLE_TYPE obstacle, int row, int index){
 	//check for type of obstacle
 	switch(obstacle){
 	case NO_OBST: 	for(i=0;i<32;i++){
-						if(i==0 || i==31){
-							mainMap[(row+index*32)*32+i]=Gray|WALL_PAL;
-							mainMap[(row+1+index*32)*32+i]=Gray|WALL_PAL;
-						}else if(i==1){
-							mainMap[(row+index*32)*32+i]=Floor|WALL_PAL;
-							mainMap[(row+1+index*32)*32+i]=Floor|WALL_PAL;
-						}else if(i==30){
-							mainMap[(row+index*32)*32+i]=Floor|TILE_FLIP_H|WALL_PAL;
-							mainMap[(row+1+index*32)*32+i]=Floor|TILE_FLIP_H|WALL_PAL;
-						}else{
-							mainMap[(row+index*32)*32+i]=Transp|WALL_PAL;
-							mainMap[(row+1+index*32)*32+i]=Transp|WALL_PAL;
-						}
-					} break;
+						obstMap[(row+index*32)*32+i]=Transp|WALL_PAL;
+						obstMap[(row+1+index*32)*32+i]=Transp|WALL_PAL;
+					}
+					break;
 	case LEFT_OBST:	for(i=0;i<32;i++){
-						if(i==0 || i==31){
-							mainMap[(row+index*32)*32+i]=Gray|WALL_PAL;
-							mainMap[(row+1+index*32)*32+i]=Gray|WALL_PAL;
-						}else if(i==1){
-						mainMap[(row+index*32)*32+i]=Floor|WALL_PAL;
-						mainMap[(row+1+index*32)*32+i]=Floor|WALL_PAL;
-						}else if(i==2){
-							mainMap[(row+index*32)*32+i]=AC|OBST_PAL;
-							mainMap[(row+1+index*32)*32+i]=(AC+2)|OBST_PAL;
+						if(i==2){
+							obstMap[(row+index*32)*32+i]=AC|OBST_PAL;
+							obstMap[(row+1+index*32)*32+i]=(AC+2)|OBST_PAL;
 						}else if(i==3){
-							mainMap[(row+index*32)*32+i]=(AC+1)|OBST_PAL;
-							mainMap[(row+1+index*32)*32+i]=(AC+3)|OBST_PAL;
-						}else if(i==30){
-							mainMap[(row+index*32)*32+i]=Floor|TILE_FLIP_H|WALL_PAL;
-							mainMap[(row+1+index*32)*32+i]=Floor|TILE_FLIP_H|WALL_PAL;
+							obstMap[(row+index*32)*32+i]=(AC+1)|OBST_PAL;
+							obstMap[(row+1+index*32)*32+i]=(AC+3)|OBST_PAL;
 						}else{
-							mainMap[(row+index*32)*32+i]=Transp|WALL_PAL;
+							obstMap[(row+index*32)*32+i]=Transp|WALL_PAL;
 						}
 					} break;
 	case RIGHT_OBST:for(i=0;i<32;i++){
-						if(i==0 || i==31){
-							mainMap[(row+index*32)*32+i]=Gray|WALL_PAL;
-							mainMap[(row+1+index*32)*32+i]=Gray|WALL_PAL;
-						}else if(i==1){
-						mainMap[(row+index*32)*32+i]=Floor|WALL_PAL;
-						mainMap[(row+1+index*32)*32+i]=Floor|WALL_PAL;
-						}else if(i==29){
-							mainMap[(row+index*32)*32+i]=AC|TILE_FLIP_H|OBST_PAL;
-							mainMap[(row+1+index*32)*32+i]=(AC+2)|TILE_FLIP_H|OBST_PAL;
+						if(i==29){
+							obstMap[(row+index*32)*32+i]=AC|TILE_FLIP_H|OBST_PAL;
+							obstMap[(row+1+index*32)*32+i]=(AC+2)|TILE_FLIP_H|OBST_PAL;
 						}else if(i==28){
-							mainMap[(row+index*32)*32+i]=(AC+1)|TILE_FLIP_H|OBST_PAL;
-							mainMap[(row+1+index*32)*32+i]=(AC+3)|TILE_FLIP_H|OBST_PAL;
-						}else if(i==30){
-							mainMap[(row+index*32)*32+i]=Floor|TILE_FLIP_H|WALL_PAL;
-							mainMap[(row+1+index*32)*32+i]=Floor|TILE_FLIP_H|WALL_PAL;
+							obstMap[(row+index*32)*32+i]=(AC+1)|TILE_FLIP_H|OBST_PAL;
+							obstMap[(row+1+index*32)*32+i]=(AC+3)|TILE_FLIP_H|OBST_PAL;
 						}else{
-							mainMap[(row+index*32)*32+i]=Transp|WALL_PAL;
+							obstMap[(row+index*32)*32+i]=Transp|WALL_PAL;
 						}
 					} break;
 	default:		break;
@@ -261,6 +262,7 @@ void graphics_update_map(int index){
 void graphics_shift_main(void){
 	//setting shift register of BG0
 	REG_BG1VOFS=bg_shift_main;
+	REG_BG0VOFS=bg_shift_main;
 	//decrement shift register and check for limit
 	if(--bg_shift_main<0){
 		bg_shift_main=511;
@@ -298,7 +300,7 @@ void graphics_shift_sprite(void){
 		}
 	}
 	//cycling through sprite graphics to make it move
-	if(++gfx_cnt==100){
+	if(++gfx_cnt==20){
 		gfx_cnt=0;
 		switch(cat_state){
 			case 1:	cat_state=2;
