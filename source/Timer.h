@@ -12,4 +12,6 @@
 
 void timer_setup(void* fun_handler_main, void* fun_handler_back, void* fun_handler_sprite);
 
+void timer_disable(void);
+
 #endif /* TIMER_H_ */

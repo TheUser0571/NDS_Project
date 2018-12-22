@@ -47,8 +47,7 @@ main.o: /home/nds/files/workspace/NDS_Project/source/main.c \
   /opt/devkitPro/libnds/include/nds/arm9/sprite.h \
   /opt/devkitPro/libnds/include/nds/system.h \
   /opt/devkitPro/libnds/include/nds/arm9/decompress.h \
-  /home/nds/files/workspace/NDS_Project/source/Graphics.h \
-  /home/nds/files/workspace/NDS_Project/source/Timer.h
+  /home/nds/files/workspace/NDS_Project/source/game.h
 
 /opt/devkitPro/libnds/include/nds.h:
 
@@ -146,6 +145,4 @@ main.o: /home/nds/files/workspace/NDS_Project/source/main.c \
 
 /opt/devkitPro/libnds/include/nds/arm9/decompress.h:
 
-/home/nds/files/workspace/NDS_Project/source/Graphics.h:
-
-/home/nds/files/workspace/NDS_Project/source/Timer.h:
+/home/nds/files/workspace/NDS_Project/source/game.h:

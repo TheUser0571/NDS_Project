@@ -23,6 +23,10 @@ void timer_setup(void* fun_handler_main, void* fun_handler_back, void* fun_handl
 	TIMER_CR(2)=TIMER_ENABLE|TIMER_DIV_64|TIMER_IRQ_REQ;
 	TIMER_DATA(2)=TIMER_FREQ_64(200);
 	irqEnable(IRQ_TIMER2);
+}
 
-
+void timer_disable(void){
+	irqDisable(IRQ_TIMER0);
+	irqDisable(IRQ_TIMER1);
+	irqDisable(IRQ_TIMER2);
 }

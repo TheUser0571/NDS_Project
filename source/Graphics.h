@@ -30,6 +30,10 @@ void graphics_shift_back(void);
 
 void graphics_shift_sprite(void);
 
-void graphics_handle_input(void);
+void graphics_jump(void);
+
+int graphics_checkCollision(void);
+
+void graphics_game_over(void);
 
 #endif /* GRAPHICS_H_ */

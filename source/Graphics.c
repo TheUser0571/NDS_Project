@@ -6,7 +6,8 @@
  */
 #include "Graphics.h"
 #include "clouds.h"
-#include "AC.h"
+#include "Balcony2.h"
+#include "Building2.h"
 #include "NyanCat1.h"
 #include "NyanCat2.h"
 #include "NyanCat3.h"
@@ -14,13 +15,15 @@
 
 #define SIMULATION
 
-#define PROBABILITY 0.12 //porbability of obstacle
+#define PROBABILITY 0.8 //porbability of obstacle
 #define TILE_OFFSET 16 //offset for tile memory
-#define WALL_PAL (0xf<<12) //palette for buildings
+#define WALL_PAL (0xa<<12) //palette for buildings
 #define OBST_PAL (0xe<<12) //palette for obstacles
+#define WALL_PAL_OFFSET 0xa0
+#define OBST_PAL_OFFSET 0xe0
 //initial background shift and sprite position
 int bg_shift_main = 511, bg_shift_back = 511,
-		x_pos_sprite = 16, y_pos_sprite = 140;
+		x_pos_sprite = 32, y_pos_sprite = 144;
 //sprite starts on left side
 int inc = 1;
 bool jump = false;
@@ -34,8 +37,11 @@ u16* backTiles, *mainTiles, *obstTiles;
 //sprite graphics pointers
 u16* gfx1=NULL, *gfx2=NULL, *gfx3=NULL, *gfx_active=NULL;
 int gfx_cnt=0;
+double obst_cnt =0;
 //definition of tile numbers
-enum TileNum{Transp, Floor, Gray, AC};
+enum TileNum{Transp, Floor, Gray};
+
+enum ObstTiles{EMPTY, BALCONY};
 //definition of obstacle types
 enum OBSTACLE_TYPE{NO_OBST, LEFT_OBST, RIGHT_OBST};
 
@@ -48,27 +54,21 @@ u8 FullTileTransp[32]={0,0,0,0,
 					   0,0,0,0,
 					   0,0,0,0,
 					   0,0,0,0,};
-u8 FloorTile[32]={     0xee,0xee,0xee,0xff,
-					   0xee,0xee,0xee,0xff,
-					   0xee,0xee,0xee,0xff,
-					   0xee,0xee,0xee,0xff,
-					   0xee,0xee,0xee,0xff,
-					   0xee,0xee,0xee,0xff,
-					   0xee,0xee,0xee,0xff,
-					   0xee,0xee,0xee,0xff};
-u8 GrayTile[32]={      0xee,0xee,0xee,0xee,
-					   0xee,0xee,0xee,0xee,
-					   0xee,0xee,0xee,0xee,
-					   0xee,0xee,0xee,0xee,
-					   0xee,0xee,0xee,0xee,
-					   0xee,0xee,0xee,0xee,
-					   0xee,0xee,0xee,0xee,
-					   0xee,0xee,0xee,0xee};
 
 void graphics_build(enum OBSTACLE_TYPE obstacle, int row, int index);
 
 void graphics_init(void){
-	//Enable VRAM
+	bg_shift_main = 511;
+	bg_shift_back = 511;
+	x_pos_sprite = 32;
+	y_pos_sprite = 144;
+	inc = 1;
+	cat_state=1;
+	jump = false;
+	cat_rot = 1;
+	gfx_cnt=0;
+	obst_cnt =0;
+	//Enable VRAM A
 	VRAM_A_CR = VRAM_ENABLE| VRAM_A_MAIN_BG;
 	//VRAM B for sprite
 	VRAM_B_CR = VRAM_ENABLE|VRAM_B_MAIN_SPRITE_0x06400000;
@@ -126,7 +126,7 @@ void graphics_init_sprite(void){
 	oamUpdate(&oamMain);
 }
 //setting up background
-void graphics_setup_BG1(void){
+void graphics_setup_BG2(void){
 	//copying palette, tiles and map
 	dmaCopy(cloudsPal, BG_PALETTE, cloudsPalLen);
 	dmaCopy(cloudsMap,backMap,cloudsMapLen);
@@ -142,27 +142,43 @@ void graphics_setup_BG1(void){
 	}
 }
 //setting up buildings
-void graphics_setup_BG2(void){
-	//setting custop colors
-	BG_PALETTE[0xfe]=ARGB16(1,15,15,15);
-	BG_PALETTE[0xff]=ARGB16(1,0,0,0);
+void graphics_setup_BG1(void){
+	//copying palette
+	dmaCopy(Building2Pal,&BG_PALETTE[WALL_PAL_OFFSET],Building2PalLen);
+	//BG_PALETTE[WALL_PAL_OFFSET+1]=ARGB16(1,0,31,0);
 
-	//coping custom tiles into memory
-	dmaCopy(FullTileTransp,&mainTiles[Transp*TILE_OFFSET],32);
-	dmaCopy(GrayTile,&mainTiles[Gray*TILE_OFFSET],32);
-	dmaCopy(FloorTile,&mainTiles[Floor*TILE_OFFSET],32);
+	//coping tiles into memory
+	dmaCopy(FullTileTransp,mainTiles,32);
+	dmaCopy(Building2Tiles,&mainTiles[TILE_OFFSET],Building2TilesLen);
 
 	int row, col;
-	for(row=0;row<64;row++){
+	for(row=0;row<64;row+=4){
 		for(col=0;col<32;col++){
 			if(col==0 || col==31){
-				mainMap[row*32+col]=Gray|WALL_PAL;
-			}
-			if(col==1){
-				mainMap[row*32+col]=Floor|WALL_PAL;
-			}
-			if(col==30){
-				mainMap[row*32+col]=Floor|TILE_FLIP_H|WALL_PAL;
+				mainMap[row*32+col]=1|WALL_PAL;
+				mainMap[(row+1)*32+col]=5|WALL_PAL;
+				mainMap[(row+2)*32+col]=9|WALL_PAL;
+				mainMap[(row+3)*32+col]=13|WALL_PAL;
+			}else if(col==1||col==30){
+				mainMap[row*32+col]=2|WALL_PAL;
+				mainMap[(row+1)*32+col]=6|WALL_PAL;
+				mainMap[(row+2)*32+col]=10|WALL_PAL;
+				mainMap[(row+3)*32+col]=14|WALL_PAL;
+			}else if(col==2||col==29){
+				mainMap[row*32+col]=3|WALL_PAL;
+				mainMap[(row+1)*32+col]=7|WALL_PAL;
+				mainMap[(row+2)*32+col]=11|WALL_PAL;
+				mainMap[(row+3)*32+col]=15|WALL_PAL;
+			}else if(col==3||col==28){
+				mainMap[row*32+col]=4|WALL_PAL;
+				mainMap[(row+1)*32+col]=8|WALL_PAL;
+				mainMap[(row+2)*32+col]=12|WALL_PAL;
+				mainMap[(row+3)*32+col]=16|WALL_PAL;
+			}else{
+				mainMap[row*32+col]=0|WALL_PAL;
+				mainMap[(row+1)*32+col]=0|WALL_PAL;
+				mainMap[(row+2)*32+col]=0|WALL_PAL;
+				mainMap[(row+3)*32+col]=0|WALL_PAL;
 			}
 		}
 	}
@@ -170,15 +186,15 @@ void graphics_setup_BG2(void){
 
 void graphics_setup_BG0(void){
 
-	//copying tiles and palette of AC
-	//TODO: change this to balcony
-	dmaCopy(ACTiles,&obstTiles[AC*TILE_OFFSET],ACTilesLen);
-	dmaCopy(ACPal,&BG_PALETTE[0xe0],ACPalLen);
+	//copying tiles and palette of balcony
+	dmaCopy(FullTileTransp,obstTiles,32);
+	dmaCopy(Balcony2Tiles,&obstTiles[BALCONY*TILE_OFFSET],Balcony2TilesLen);
+	dmaCopy(Balcony2Pal,&BG_PALETTE[OBST_PAL_OFFSET],Balcony2PalLen);
 
 	//designing initial map
 	double var;
 	int row, index=0;
-	for(row=0;row<32;row+=2){
+	for(row=2;row<32;row+=4){
 		var = ((double)rand()/RAND_MAX);
 		if(var<PROBABILITY){
 			if(var<PROBABILITY/2){
@@ -191,7 +207,7 @@ void graphics_setup_BG0(void){
 		}
 	}
 	index=1;
-	for(row=0;row<32;row+=2){
+	for(row=2;row<32;row+=4){
 		var = ((double)rand()/RAND_MAX);
 		if(var<PROBABILITY){
 			if(var<PROBABILITY/2){
@@ -209,34 +225,48 @@ void graphics_setup_BG0(void){
 void graphics_build(enum OBSTACLE_TYPE obstacle, int row, int index){
 	int i;
 	//check for type of obstacle
+	if(obst_cnt==0||obst_cnt==1) obstacle=NO_OBST;
 	switch(obstacle){
 	case NO_OBST: 	for(i=0;i<32;i++){
-						obstMap[(row+index*32)*32+i]=Transp|WALL_PAL;
-						obstMap[(row+1+index*32)*32+i]=Transp|WALL_PAL;
+						obstMap[(row+index*32)*32+i]=EMPTY|OBST_PAL;
+						obstMap[(row+1+index*32)*32+i]=EMPTY|OBST_PAL;
 					}
+					obst_cnt++;
 					break;
 	case LEFT_OBST:	for(i=0;i<32;i++){
-						if(i==2){
-							obstMap[(row+index*32)*32+i]=AC|OBST_PAL;
-							obstMap[(row+1+index*32)*32+i]=(AC+2)|OBST_PAL;
-						}else if(i==3){
-							obstMap[(row+index*32)*32+i]=(AC+1)|OBST_PAL;
-							obstMap[(row+1+index*32)*32+i]=(AC+3)|OBST_PAL;
+						if(i==4){
+							obstMap[(row+index*32)*32+i]=BALCONY|OBST_PAL;
+							obstMap[(row+1+index*32)*32+i]=(BALCONY+3)|OBST_PAL;
+						}else if(i==5){
+							obstMap[(row+index*32)*32+i]=(BALCONY+1)|OBST_PAL;
+							obstMap[(row+1+index*32)*32+i]=(BALCONY+4)|OBST_PAL;
+						}else if(i==6){
+							obstMap[(row+index*32)*32+i]=(BALCONY+2)|OBST_PAL;
+							obstMap[(row+1+index*32)*32+i]=(BALCONY+5)|OBST_PAL;
 						}else{
-							obstMap[(row+index*32)*32+i]=Transp|WALL_PAL;
+							obstMap[(row+index*32)*32+i]=EMPTY|OBST_PAL;
+							obstMap[(row+1+index*32)*32+i]=EMPTY|OBST_PAL;
 						}
-					} break;
+					}
+					obst_cnt=0;
+					break;
 	case RIGHT_OBST:for(i=0;i<32;i++){
-						if(i==29){
-							obstMap[(row+index*32)*32+i]=AC|TILE_FLIP_H|OBST_PAL;
-							obstMap[(row+1+index*32)*32+i]=(AC+2)|TILE_FLIP_H|OBST_PAL;
-						}else if(i==28){
-							obstMap[(row+index*32)*32+i]=(AC+1)|TILE_FLIP_H|OBST_PAL;
-							obstMap[(row+1+index*32)*32+i]=(AC+3)|TILE_FLIP_H|OBST_PAL;
+						if(i==27){
+							obstMap[(row+index*32)*32+i]=BALCONY|TILE_FLIP_H|OBST_PAL;
+							obstMap[(row+1+index*32)*32+i]=(BALCONY+3)|TILE_FLIP_H|OBST_PAL;
+						}else if(i==26){
+							obstMap[(row+index*32)*32+i]=(BALCONY+1)|TILE_FLIP_H|OBST_PAL;
+							obstMap[(row+1+index*32)*32+i]=(BALCONY+4)|TILE_FLIP_H|OBST_PAL;
+						}else if(i==25){
+							obstMap[(row+index*32)*32+i]=(BALCONY+2)|TILE_FLIP_H|OBST_PAL;
+							obstMap[(row+1+index*32)*32+i]=(BALCONY+5)|TILE_FLIP_H|OBST_PAL;
 						}else{
-							obstMap[(row+index*32)*32+i]=Transp|WALL_PAL;
+							obstMap[(row+index*32)*32+i]=EMPTY|OBST_PAL;
+							obstMap[(row+1+index*32)*32+i]=EMPTY|OBST_PAL;
 						}
-					} break;
+					}
+					obst_cnt=0;
+					break;
 	default:		break;
 	}
 }
@@ -245,7 +275,7 @@ void graphics_update_map(int index){
 	int row;
 	double var;
 	//designing new map
-	for(row=0;row<32;row+=2){
+	for(row=2;row<32;row+=4){
 		var = ((double)rand()/RAND_MAX);
 		if(var<PROBABILITY){
 			if(var<PROBABILITY/2){
@@ -279,22 +309,22 @@ void graphics_shift_sprite(void){
 	if(jump){
 		if(inc){
 			//check if sprite has reached the right wall
-			if(x_pos_sprite<209){
+			if(x_pos_sprite<193){
 			cat_rot=0;
 			x_pos_sprite++;
 			}else{
 			inc = 0;
-			x_pos_sprite = 208;
+			x_pos_sprite = 192;
 			jump = false;
 			}
 		}else{
 			//check if sprite has reached the left wall
-			if(x_pos_sprite>15){
+			if(x_pos_sprite>31){
 			cat_rot=1;
 			x_pos_sprite--;
 			}else{
 				inc = 1;
-				x_pos_sprite = 16;
+				x_pos_sprite = 32;
 				jump = false;
 			}
 		}
@@ -344,25 +374,34 @@ void graphics_shift_back(void){
 	}
 }
 
-void graphics_handle_input(void){
+void graphics_jump(void){
 	//checking if cat is already jumping
 	if(!jump){
-		scanKeys();
-#ifdef DEVICE
-		if(keysHeld()==KEY_A){
-			jump = !jump;
+	//if no: begin jump
+		jump = !jump;
+		if(inc){
+			x_pos_sprite=24;
+		}else{
+			x_pos_sprite=200;
 		}
-#endif
-#ifdef SIMULATION
-		//if no: begin jump
-		if(keysDown()==KEY_A){
-			jump = !jump;
-			if(inc){
-				x_pos_sprite=8;
-			}else{
-				x_pos_sprite=216;
-			}
-		}
-#endif
 	}
+}
+
+int graphics_checkCollision(void){
+	int row = 17+bg_shift_main%8;
+	if(row>511) row-=512;
+	int col=x_pos_sprite%8;
+	if(cat_rot){
+		col-=1;
+	}else{
+		col+=1;
+	}
+	if(obstMap[row*32+col]!=0){
+		return 1;
+	}
+	return 0;
+}
+
+void graphics_game_over(void){
+
 }

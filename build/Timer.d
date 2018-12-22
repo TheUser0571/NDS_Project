@@ -1,5 +1,5 @@
-Timer.o: /home/nds/files/workspace/TstProj/source/Timer.c \
-  /home/nds/files/workspace/TstProj/source/Timer.h \
+Timer.o: /home/nds/files/workspace/NDS_Project/source/Timer.c \
+  /home/nds/files/workspace/NDS_Project/source/Timer.h \
   /opt/devkitPro/libnds/include/nds.h \
   /opt/devkitPro/libnds/include/nds/libversion.h \
   /opt/devkitPro/libnds/include/nds/ndstypes.h \
@@ -49,7 +49,7 @@ Timer.o: /home/nds/files/workspace/TstProj/source/Timer.c \
   /opt/devkitPro/libnds/include/nds/system.h \
   /opt/devkitPro/libnds/include/nds/arm9/decompress.h
 
-/home/nds/files/workspace/TstProj/source/Timer.h:
+/home/nds/files/workspace/NDS_Project/source/Timer.h:
 
 /opt/devkitPro/libnds/include/nds.h:
 
