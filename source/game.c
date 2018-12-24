@@ -40,7 +40,7 @@ void game_init(void){
 void game_checkInput(void){
 	scanKeys();
 	//if no: begin jump
-	if(keysDown()==KEY_A){
+	if(keysDown()==KEY_A||keysHeld()==KEY_A){
 		graphics_jump();
 	}else if(keysDown()==KEY_START){
 		game_init();
@@ -48,14 +48,16 @@ void game_checkInput(void){
 }
 
 void game_checkCollision(void){
+
 	if(graphics_checkCollision()){
 		//game_over();
-		timer_disable();
+		//timer_disable();
+		//printf("\nCollision\n");
 	}
+
 }
 
 void game_play(void){
-	//game_checkCollision();
 	game_checkInput();
 
 }

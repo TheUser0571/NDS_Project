@@ -12,6 +12,7 @@
 
 
 int main(void){
+	consoleDemoInit();
 	//Initializing rand seed with current time
 	srand(clock());
 	game_init();

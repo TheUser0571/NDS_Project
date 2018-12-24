@@ -14,4 +14,6 @@ void timer_setup(void* fun_handler_main, void* fun_handler_back, void* fun_handl
 
 void timer_disable(void);
 
+void timer_increase_speed(void);
+
 #endif /* TIMER_H_ */

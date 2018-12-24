@@ -1,5 +1,4 @@
 Graphics.o: /home/nds/files/workspace/NDS_Project/source/Graphics.c \
-  /home/nds/files/workspace/NDS_Project/source/Graphics.h \
   /opt/devkitPro/libnds/include/nds.h \
   /opt/devkitPro/libnds/include/nds/libversion.h \
   /opt/devkitPro/libnds/include/nds/ndstypes.h \
@@ -48,14 +47,15 @@ Graphics.o: /home/nds/files/workspace/NDS_Project/source/Graphics.c \
   /opt/devkitPro/libnds/include/nds/arm9/sprite.h \
   /opt/devkitPro/libnds/include/nds/system.h \
   /opt/devkitPro/libnds/include/nds/arm9/decompress.h \
+  /home/nds/files/workspace/NDS_Project/source/Graphics.h \
+  /home/nds/files/workspace/NDS_Project/source/Timer.h \
   /home/nds/files/workspace/NDS_Project/build/clouds.h \
   /home/nds/files/workspace/NDS_Project/build/Balcony2.h \
   /home/nds/files/workspace/NDS_Project/build/Building2.h \
   /home/nds/files/workspace/NDS_Project/build/NyanCat1.h \
   /home/nds/files/workspace/NDS_Project/build/NyanCat2.h \
-  /home/nds/files/workspace/NDS_Project/build/NyanCat3.h
-
-/home/nds/files/workspace/NDS_Project/source/Graphics.h:
+  /home/nds/files/workspace/NDS_Project/build/NyanCat3.h \
+  /home/nds/files/workspace/NDS_Project/build/game_over.h
 
 /opt/devkitPro/libnds/include/nds.h:
 
@@ -153,6 +153,10 @@ Graphics.o: /home/nds/files/workspace/NDS_Project/source/Graphics.c \
 
 /opt/devkitPro/libnds/include/nds/arm9/decompress.h:
 
+/home/nds/files/workspace/NDS_Project/source/Graphics.h:
+
+/home/nds/files/workspace/NDS_Project/source/Timer.h:
+
 /home/nds/files/workspace/NDS_Project/build/clouds.h:
 
 /home/nds/files/workspace/NDS_Project/build/Balcony2.h:
@@ -164,3 +168,5 @@ Graphics.o: /home/nds/files/workspace/NDS_Project/source/Graphics.c \
 /home/nds/files/workspace/NDS_Project/build/NyanCat2.h:
 
 /home/nds/files/workspace/NDS_Project/build/NyanCat3.h:
+
+/home/nds/files/workspace/NDS_Project/build/game_over.h:
