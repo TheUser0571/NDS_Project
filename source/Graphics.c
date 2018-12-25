@@ -16,18 +16,34 @@
 #include "NyanCat2.h"
 #include "NyanCat3.h"
 #include "game_over.h"
+#include "clock.h"
 
 #define SIMULATION
 
 #define PROBABILITY 0.2 //initial probability
+#define POWERUP_PROB 0.05 //powerup probability
 #define TILE_OFFSET 16 //offset for tile memory
 #define WALL_PAL (0xa<<12) //palette for buildings
 #define OBST_PAL (0xe<<12) //palette for obstacles
 #define GO_PAL (0xc<<12) //palette for game over screen
+#define SLOWMO_PAL (0xb<<12) //palette for slomo powerup
 #define WALL_PAL_OFFSET 0xa0
 #define OBST_PAL_OFFSET 0xe0
+#define SLOMO_PAL_OFFSET 0xb0
 #define GO_PAL_OFFSET 0xc0
 #define GO_OFFSET 17
+
+//definition of tile numbers
+enum TileNum{Transp, Floor, Gray};
+
+enum ObstTiles{EMPTY, BALCONY, CLOCK=7};
+//definition of obstacle types
+enum OBSTACLE_TYPE{NO_OBST, LEFT_OBST, RIGHT_OBST};
+//definition of powerup types
+enum POWERUP_TYPE{SLOWMO};
+//definition of powerup states
+enum POWERUP_STATE{NONE_STATE,SLOW_STATE,BOOST_STATE,SHIELD_STATE};
+
 
 double prob = PROBABILITY; //porbability of obstacle
 
@@ -49,13 +65,10 @@ u16* backTiles, *mainTiles, *obstTiles;
 u16* gfx1=NULL, *gfx2=NULL, *gfx3=NULL, *gfx_active=NULL;
 int gfx_cnt=0;
 int obst_cnt=1;
-//definition of tile numbers
-enum TileNum{Transp, Floor, Gray};
-
-enum ObstTiles{EMPTY, BALCONY};
-//definition of obstacle types
-enum OBSTACLE_TYPE{NO_OBST, LEFT_OBST, RIGHT_OBST};
-
+//powerup definitions
+int powerup_cnt=0;
+int powerup_state=NONE_STATE;
+int slowmo_count=0;
 //cutom tiles
 u8 FullTileTransp[32]={0,0,0,0,
 					   0,0,0,0,
@@ -67,6 +80,12 @@ u8 FullTileTransp[32]={0,0,0,0,
 					   0,0,0,0,};
 
 void graphics_build(enum OBSTACLE_TYPE obstacle, int row, int index);
+
+void graphics_addPowerup(enum POWERUP_TYPE type, int row, int index);
+
+void graphics_clearPowerup(int row);
+
+void graphics_pickupPowerup(enum POWERUP_TYPE type);
 
 void graphics_init(void){
 	bg_shift_main = 511;
@@ -80,6 +99,9 @@ void graphics_init(void){
 	cat_rot = 1;
 	gfx_cnt=0;
 	obst_cnt =1;
+	powerup_cnt=0;
+	powerup_state=NONE_STATE;
+	slowmo_count=0;
 	//Enable VRAM A
 	VRAM_A_CR = VRAM_ENABLE| VRAM_A_MAIN_BG;
 	//VRAM B for sprite
@@ -206,6 +228,12 @@ void graphics_setup_BG0(void){
 	dmaCopy(FullTileTransp,obstTiles,32);
 	dmaCopy(Balcony2Tiles,&obstTiles[BALCONY*TILE_OFFSET],Balcony2TilesLen);
 	dmaCopy(Balcony2Pal,&BG_PALETTE[OBST_PAL_OFFSET],Balcony2PalLen);
+
+	//copying powerup tiles and palette
+	dmaCopy(clockPal,&BG_PALETTE[SLOMO_PAL_OFFSET],clockPalLen);
+	dmaCopy(clockTiles,&obstTiles[CLOCK*TILE_OFFSET],clockTilesLen);
+
+
 	//initializing map to empty
 	int row, col;
 	for(row=0;row<64;row++){
@@ -286,11 +314,18 @@ void graphics_build(enum OBSTACLE_TYPE obstacle, int row, int index){
 }
 
 void graphics_update_map(int index){
-	int row;
+	int row, col;
+	//initializing map to empty
+	for(row=0;row<32;row++){
+		for(col=0;col<32;col++){
+			obstMap[(row+index*32)*32+col]=EMPTY|OBST_PAL;
+		}
+	}
 	double var;
 	//designing new map
 	for(row=30;row>0;row-=4){
 		var = ((double)rand()/RAND_MAX);
+		if(var<POWERUP_PROB) graphics_addPowerup(SLOWMO, row-2, index);
 		if(var<prob){
 			if(var<prob/2){
 				graphics_build(LEFT_OBST, row, index);
@@ -304,9 +339,16 @@ void graphics_update_map(int index){
 }
 
 void graphics_shift_main(void){
-	//setting shift register of BG0
-	REG_BG1VOFS=bg_shift_main;
-	REG_BG0VOFS=bg_shift_main;
+	if(powerup_state!=NONE_STATE){
+		powerup_cnt++;
+		if(powerup_state==SLOW_STATE && powerup_cnt==375){
+			timer_endSlowmo();
+			powerup_cnt=0;
+			powerup_state=NONE_STATE;
+			printf("\nSlowmo deactivated\n");
+		}
+	}
+
 	//decrement shift register and check for limit
 	if(--bg_shift_main<0){
 		bg_shift_main=511;
@@ -389,12 +431,12 @@ void graphics_shift_sprite(void){
 			cat_rot, false,//Horizontal or vertical flip
 			false);//Mosaic
 
-	oamUpdate(&oamMain);
+
 }
 
 void graphics_shift_back(void){
 	//shifting background
-	REG_BG2VOFS=bg_shift_back;
+
 	if(--bg_shift_back<0){
 		bg_shift_back=511;
 	}
@@ -424,15 +466,29 @@ int graphics_checkCollision(void){
 	}else{
 		col+=3;
 	}
-	//Checking map entry at sprite postion and return 1 if not empty
+	//Checking if map entry at sprite postion is empty
 	if(obstMap[row*32+col]&(0x03ff)||obstMap[(row+1)*32+col]&(0x03ff)
 		||obstMap[(row+2)*32+col]&(0x03ff)||obstMap[(row+3)*32+col]&(0x03ff)
 		||obstMap[(row+4)*32+col]&(0x03ff)){
+		//if not: check for powerup
+		if(((obstMap[row*32+col]&(0xf000))==SLOWMO_PAL)
+				||((obstMap[(row+1)*32+col]&(0xf000))==SLOWMO_PAL)
+				||((obstMap[(row+2)*32+col]&(0xf000))==SLOWMO_PAL)
+				||((obstMap[(row+3)*32+col]&(0xf000))==SLOWMO_PAL)
+				||((obstMap[(row+4)*32+col]&(0xf000))==SLOWMO_PAL)){
+			//delete the picked up powerup
+			graphics_clearPowerup(row);
+			//TODO: create powerup-pickup function
+			graphics_pickupPowerup(SLOWMO);
+
+
+		}else{
+			return 1;
+		}
 		/*printf("\nrow: %d, col: %d\nMap:%x,%x,%x,%x,%x\n",row,col,
 				obstMap[row*32+col],obstMap[(row+1)*32+col],
 				obstMap[(row+2)*32+col],obstMap[(row+3)*32+col],
 		        obstMap[(row+4)*32+col]);*/
-		return 1;
 	}
 	return 0;
 }
@@ -441,8 +497,55 @@ void graphics_game_over(void){
 	int row, col, row_offset=5+bg_shift_main/8, col_offset=8;
 	for(row=0;row<12;row++){
 		for(col=0;col<16;col++){
-			//if(row+row_offset>64) row-=64;
+			if(row+row_offset>64) row-=64;
 			mainMap[(row+row_offset)*32+col+col_offset]=(GO_OFFSET+(row*16+col))|GO_PAL;
+			obstMap[(row+row_offset)*32+col+col_offset]=EMPTY|OBST_PAL;
 		}
+	}
+}
+void graphics_updateScreen(void){
+	REG_BG2VOFS=bg_shift_back;
+	REG_BG1VOFS=bg_shift_main;
+	REG_BG0VOFS=bg_shift_main;
+	oamUpdate(&oamMain);
+}
+
+void graphics_addPowerup(enum POWERUP_TYPE type, int row, int index){
+	int offset = 15;
+	switch(type){
+	case SLOWMO:	obstMap[(row+index*32)*32+offset]=CLOCK|SLOWMO_PAL;
+					obstMap[(row+index*32)*32+offset+1]=(CLOCK+1)|SLOWMO_PAL;
+					obstMap[(row+1+index*32)*32+offset]=(CLOCK+2)|SLOWMO_PAL;
+					obstMap[(row+1+index*32)*32+offset+1]=(CLOCK+3)|SLOWMO_PAL;
+					break;
+	default:		break;
+	}
+}
+
+void graphics_clearPowerup(int row){
+	int i, offset = 15;
+	for(i=row-1;i<=row+6;i++){
+		obstMap[i*32+offset]=EMPTY|OBST_PAL;
+		obstMap[i*32+offset+1]=EMPTY|OBST_PAL;
+	}
+}
+
+void graphics_pickupPowerup(enum POWERUP_TYPE type){
+	switch(type){
+	case SLOWMO: 	slowmo_count++;
+					printf("\nslowmo_count: %d\n",slowmo_count);
+					break;
+	default:		break;
+	}
+
+}
+
+void graphics_activateSlowmo(void){
+	if(slowmo_count && powerup_state==NONE_STATE){
+		slowmo_count--;
+		timer_startSlowmo();
+		powerup_cnt=0;
+		powerup_state=SLOW_STATE;
+		printf("\nSlowmo activated\nslowmo_count: %d",slowmo_count);
 	}
 }

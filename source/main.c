@@ -12,6 +12,7 @@
 
 
 int main(void){
+	//initializing console for debugging
 	consoleDemoInit();
 	//Initializing rand seed with current time
 	srand(clock());
@@ -20,5 +21,6 @@ int main(void){
     	//wait for action
 
     	game_play();
-        swiWaitForVBlank();	
+
+        swiWaitForVBlank();
 }

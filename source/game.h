@@ -12,8 +12,6 @@ void game_init(void);
 
 void game_checkInput(void);
 
-void game_checkCollision(void);
-
 void game_play(void);
 
 #endif /* GAME_H_ */

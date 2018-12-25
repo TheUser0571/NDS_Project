@@ -36,4 +36,8 @@ int graphics_checkCollision(void);
 
 void graphics_game_over(void);
 
+void graphics_updateScreen(void);
+
+void graphics_activateSlowmo(void);
+
 #endif /* GRAPHICS_H_ */

@@ -55,7 +55,8 @@ Graphics.o: /home/nds/files/workspace/NDS_Project/source/Graphics.c \
   /home/nds/files/workspace/NDS_Project/build/NyanCat1.h \
   /home/nds/files/workspace/NDS_Project/build/NyanCat2.h \
   /home/nds/files/workspace/NDS_Project/build/NyanCat3.h \
-  /home/nds/files/workspace/NDS_Project/build/game_over.h
+  /home/nds/files/workspace/NDS_Project/build/game_over.h \
+  /home/nds/files/workspace/NDS_Project/build/clock.h
 
 /opt/devkitPro/libnds/include/nds.h:
 
@@ -170,3 +171,5 @@ Graphics.o: /home/nds/files/workspace/NDS_Project/source/Graphics.c \
 /home/nds/files/workspace/NDS_Project/build/NyanCat3.h:
 
 /home/nds/files/workspace/NDS_Project/build/game_over.h:
+
+/home/nds/files/workspace/NDS_Project/build/clock.h:

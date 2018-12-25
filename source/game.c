@@ -44,22 +44,14 @@ void game_checkInput(void){
 		graphics_jump();
 	}else if(keysDown()==KEY_START){
 		game_init();
+	}else if(keysDown()==KEY_B){
+		graphics_activateSlowmo();
 	}
-}
-
-void game_checkCollision(void){
-
-	if(graphics_checkCollision()){
-		//game_over();
-		//timer_disable();
-		//printf("\nCollision\n");
-	}
-
 }
 
 void game_play(void){
+	graphics_updateScreen();
 	game_checkInput();
-
 }
 
 

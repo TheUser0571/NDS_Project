@@ -24,7 +24,7 @@ void timer_setup(void* fun_handler_main, void* fun_handler_back, void* fun_handl
 	//initializing timer 2 (sprite)
 	irqSet(IRQ_TIMER2, fun_handler_sprite);
 	TIMER_CR(2)=TIMER_ENABLE|TIMER_DIV_64|TIMER_IRQ_REQ;
-	TIMER_DATA(2)=TIMER_FREQ_64(250);
+	TIMER_DATA(2)=TIMER_FREQ_64(speed+100);
 	irqEnable(IRQ_TIMER2);
 }
 
@@ -34,8 +34,16 @@ void timer_disable(void){
 	irqDisable(IRQ_TIMER2);
 }
 
-void timer_increase_speed(void){
-	speed=speed+20;
+void timer_startSlowmo(void){
+	speed=speed/2;
 	TIMER_DATA(0)=TIMER_FREQ_64(speed);
 	TIMER_DATA(1)=TIMER_FREQ_64(speed/5);
+	TIMER_DATA(2)=TIMER_FREQ_64(speed+100);
+}
+
+void timer_endSlowmo(void){
+	speed=150;
+	TIMER_DATA(0)=TIMER_FREQ_64(speed);
+	TIMER_DATA(1)=TIMER_FREQ_64(speed/5);
+	TIMER_DATA(2)=TIMER_FREQ_64(speed+100);
 }
