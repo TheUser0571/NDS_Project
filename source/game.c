@@ -43,6 +43,8 @@ void game_checkInput(void){
 		graphics_activateSlowmo();
 	}else if(keysDown()==KEY_X){
 		graphics_activateBoost();
+	}else if(keysDown()==KEY_Y){
+		graphics_activateShield();
 	}
 }
 

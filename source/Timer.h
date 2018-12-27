@@ -18,4 +18,8 @@ void timer_startSlowmo(void);
 
 void timer_endSlowmo(void);
 
+void timer_startBoost(void);
+
+void timer_endBoost(void);
+
 #endif /* TIMER_H_ */

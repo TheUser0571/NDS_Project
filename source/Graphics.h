@@ -42,4 +42,6 @@ void graphics_activateSlowmo(void);
 
 void graphics_activateBoost(void);
 
+void graphics_activateShield(void);
+
 #endif /* GRAPHICS_H_ */

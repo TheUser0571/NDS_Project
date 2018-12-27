@@ -57,7 +57,9 @@ Graphics.o: /home/nds/files/workspace/NDS_Project/source/Graphics.c \
   /home/nds/files/workspace/NDS_Project/build/NyanCat3.h \
   /home/nds/files/workspace/NDS_Project/build/game_over.h \
   /home/nds/files/workspace/NDS_Project/build/clock.h \
-  /home/nds/files/workspace/NDS_Project/build/rainbow.h
+  /home/nds/files/workspace/NDS_Project/build/rainbow.h \
+  /home/nds/files/workspace/NDS_Project/build/shield.h \
+  /home/nds/files/workspace/NDS_Project/build/rainbow2.h
 
 /opt/devkitPro/libnds/include/nds.h:
 
@@ -176,3 +178,7 @@ Graphics.o: /home/nds/files/workspace/NDS_Project/source/Graphics.c \
 /home/nds/files/workspace/NDS_Project/build/clock.h:
 
 /home/nds/files/workspace/NDS_Project/build/rainbow.h:
+
+/home/nds/files/workspace/NDS_Project/build/shield.h:
+
+/home/nds/files/workspace/NDS_Project/build/rainbow2.h:

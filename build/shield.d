@@ -1,0 +1,1 @@
+shield.o: shield.s
