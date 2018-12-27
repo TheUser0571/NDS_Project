@@ -1,0 +1,1 @@
+rainbow.o: rainbow.s

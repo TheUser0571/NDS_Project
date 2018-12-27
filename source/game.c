@@ -16,11 +16,6 @@ enum GameState{ACTIVE, GAMEOVER};
 
 int game_state=ACTIVE;
 
-void game_over(void){
-	graphics_game_over();
-	game_state=GAMEOVER;
-}
-
 void game_init(void){
 	game_state=ACTIVE;
 	//Initializing VRAM and BGCNT
@@ -46,6 +41,8 @@ void game_checkInput(void){
 		game_init();
 	}else if(keysDown()==KEY_B){
 		graphics_activateSlowmo();
+	}else if(keysDown()==KEY_X){
+		graphics_activateBoost();
 	}
 }
 

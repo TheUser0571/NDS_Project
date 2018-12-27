@@ -40,4 +40,6 @@ void graphics_updateScreen(void);
 
 void graphics_activateSlowmo(void);
 
+void graphics_activateBoost(void);
+
 #endif /* GRAPHICS_H_ */
