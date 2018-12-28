@@ -1,4 +1,5 @@
-main.o: /home/nds/files/workspace/NDS_Project/source/main.c \
+Audio.o: /home/nds/files/workspace/NDS_Project/source/Audio.c \
+  /home/nds/files/workspace/NDS_Project/source/Audio.h \
   /opt/devkitPro/libnds/include/nds.h \
   /opt/devkitPro/libnds/include/nds/libversion.h \
   /opt/devkitPro/libnds/include/nds/ndstypes.h \
@@ -47,12 +48,12 @@ main.o: /home/nds/files/workspace/NDS_Project/source/main.c \
   /opt/devkitPro/libnds/include/nds/arm9/sprite.h \
   /opt/devkitPro/libnds/include/nds/system.h \
   /opt/devkitPro/libnds/include/nds/arm9/decompress.h \
-  /home/nds/files/workspace/NDS_Project/source/game.h \
-  /home/nds/files/workspace/NDS_Project/source/Audio.h \
   /home/nds/files/workspace/NDS_Project/build/soundbank_bin.h \
   /home/nds/files/workspace/NDS_Project/build/soundbank.h \
   /opt/devkitPro/libnds/include/maxmod9.h \
   /opt/devkitPro/libnds/include/mm_types.h
+
+/home/nds/files/workspace/NDS_Project/source/Audio.h:
 
 /opt/devkitPro/libnds/include/nds.h:
 
@@ -149,10 +150,6 @@ main.o: /home/nds/files/workspace/NDS_Project/source/main.c \
 /opt/devkitPro/libnds/include/nds/system.h:
 
 /opt/devkitPro/libnds/include/nds/arm9/decompress.h:
-
-/home/nds/files/workspace/NDS_Project/source/game.h:
-
-/home/nds/files/workspace/NDS_Project/source/Audio.h:
 
 /home/nds/files/workspace/NDS_Project/build/soundbank_bin.h:
 

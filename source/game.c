@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <time.h>
 #include "Graphics.h"
+#include "Audio.h"
 #include "Timer.h"
 
 enum GameState{ACTIVE, GAMEOVER};
@@ -30,6 +31,9 @@ void game_init(void){
 	graphics_init_sprite();
 	//setting up timers
 	timer_setup(&graphics_shift_main, &graphics_shift_back, &graphics_shift_sprite);
+	//play music
+	Audio_Init();
+	Audio_PlayMusic();
 }
 
 void game_checkInput(void){
@@ -52,5 +56,3 @@ void game_play(void){
 	graphics_updateScreen();
 	game_checkInput();
 }
-
-

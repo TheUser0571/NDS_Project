@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <time.h>
 #include "game.h"
+#include "Audio.h"
 
 
 int main(void){
@@ -17,10 +18,9 @@ int main(void){
 	//Initializing rand seed with current time
 	srand(clock());
 	game_init();
-    while(1)
+    while(1) {
     	//wait for action
-
     	game_play();
-
         swiWaitForVBlank();
+    }
 }

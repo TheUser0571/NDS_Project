@@ -48,6 +48,11 @@ game.o: /home/nds/files/workspace/NDS_Project/source/game.c \
   /opt/devkitPro/libnds/include/nds/system.h \
   /opt/devkitPro/libnds/include/nds/arm9/decompress.h \
   /home/nds/files/workspace/NDS_Project/source/Graphics.h \
+  /home/nds/files/workspace/NDS_Project/source/Audio.h \
+  /home/nds/files/workspace/NDS_Project/build/soundbank_bin.h \
+  /home/nds/files/workspace/NDS_Project/build/soundbank.h \
+  /opt/devkitPro/libnds/include/maxmod9.h \
+  /opt/devkitPro/libnds/include/mm_types.h \
   /home/nds/files/workspace/NDS_Project/source/Timer.h
 
 /opt/devkitPro/libnds/include/nds.h:
@@ -147,5 +152,15 @@ game.o: /home/nds/files/workspace/NDS_Project/source/game.c \
 /opt/devkitPro/libnds/include/nds/arm9/decompress.h:
 
 /home/nds/files/workspace/NDS_Project/source/Graphics.h:
+
+/home/nds/files/workspace/NDS_Project/source/Audio.h:
+
+/home/nds/files/workspace/NDS_Project/build/soundbank_bin.h:
+
+/home/nds/files/workspace/NDS_Project/build/soundbank.h:
+
+/opt/devkitPro/libnds/include/maxmod9.h:
+
+/opt/devkitPro/libnds/include/mm_types.h:
 
 /home/nds/files/workspace/NDS_Project/source/Timer.h:

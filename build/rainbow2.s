@@ -9,7 +9,7 @@
 @	+ 32 tiles not compressed
 @	Total size: 32 + 1024 = 1056
 @
-@	Time-stamp: 2018-12-27, 14:54:18
+@	Time-stamp: 2018-12-28, 13:24:27
 @	Exported by Cearn's GBA Image Transmogrifier, v0.8.3
 @	( http://www.coranac.com/projects/#grit )
 @

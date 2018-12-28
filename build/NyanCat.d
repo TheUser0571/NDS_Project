@@ -1,1 +1,0 @@
-NyanCat.o: NyanCat.s
