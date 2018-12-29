@@ -49,11 +49,6 @@ enum TileNum{Transp, Floor, Gray};
 enum ObstTiles{EMPTY, BALCONY, CLOCK=7, RAINBOW=11, SHIELD_T=15};
 //definition of obstacle types
 enum OBSTACLE_TYPE{NO_OBST, LEFT_OBST, RIGHT_OBST};
-//definition of powerup types
-enum POWERUP_TYPE{SLOWMO,BOOST,SHIELD};
-//definition of powerup states
-enum POWERUP_STATE{NONE_STATE,SLOW_STATE,BOOST_STATE,SHIELD_STATE,MINI_SHIELD_STATE};
-
 
 double prob = PROBABILITY; //porbability of obstacle
 
@@ -76,9 +71,6 @@ u16* gfx1=NULL, *gfx2=NULL, *gfx3=NULL, *gfx_active=NULL;
 int gfx_cnt=0;
 int obst_cnt=1;
 //powerup definitions
-int powerup_cnt=0;
-int powerup_state=NONE_STATE;
-int slowmo_count=0, boost_count=0, shield_count=0;
 int hide_count=0;
 //cutom tiles
 u8 FullTileTransp[32]={0,0,0,0,
@@ -91,16 +83,9 @@ u8 FullTileTransp[32]={0,0,0,0,
 					   0,0,0,0,};
 
 void graphics_build(enum OBSTACLE_TYPE obstacle, int row, int index);
-
 void graphics_addPowerup(enum POWERUP_TYPE type, int row, int index);
-
 void graphics_clearPowerup(int row);
-
 void graphics_pickupPowerup(enum POWERUP_TYPE type);
-
-void graphics_drawRainbow(void);
-
-void graphics_clearRainbow(void);
 
 void graphics_init(void){
 	bg_shift_main = 511;
@@ -115,11 +100,6 @@ void graphics_init(void){
 	cat_rot = 1;
 	gfx_cnt=0;
 	obst_cnt =1;
-	powerup_cnt=0;
-	powerup_state=NONE_STATE;
-	slowmo_count=0;
-	boost_count=0;
-	shield_count=0;
 	hide_count=0;
 	//Enable VRAM A
 	VRAM_A_CR = VRAM_ENABLE| VRAM_A_MAIN_BG;
@@ -373,34 +353,6 @@ void graphics_update_map(int index){
 }
 
 void graphics_shift_main(void){
-	if(powerup_state!=NONE_STATE){
-		powerup_cnt++;
-		if(powerup_state==SLOW_STATE && powerup_cnt==250){
-			timer_endSlowmo();
-			powerup_cnt=0;
-			powerup_state=NONE_STATE;
-			printf("\nSlowmo deactivated\n");
-		}else if(powerup_state==BOOST_STATE && powerup_cnt==600){
-			timer_endBoost();
-			powerup_cnt=0;
-			powerup_state=MINI_SHIELD_STATE;
-			graphics_clearRainbow();
-			printf("\nBoost deactivated\n");
-		}else if(powerup_state==SHIELD_STATE && powerup_cnt==400){
-			powerup_cnt=0;
-			powerup_state=NONE_STATE;
-			hide_sprite=false;
-			printf("\nShield deactivated\n");
-		}else if(powerup_state==MINI_SHIELD_STATE && powerup_cnt==200){
-			powerup_cnt=0;
-			powerup_state=NONE_STATE;
-			hide_sprite=false;
-		}else if(powerup_state==BOOST_STATE && !(bg_shift_main%8) && x_pos_sprite>105 && x_pos_sprite<119){
-			graphics_clearRainbow();
-			graphics_drawRainbow();
-		}
-	}
-
 	//decrement shift register and check for limit
 	if(--bg_shift_main<0){
 		bg_shift_main=511;
@@ -410,15 +362,9 @@ void graphics_shift_main(void){
 		//if half limit reached: design new top map
 		graphics_update_map(0);
 	}
-	//Checking for collision
-	if(graphics_checkCollision()){
-		//printf("\nCollision\n");
-		timer_disable();
-		graphics_game_over();
-	}
 }
 
-void graphics_shift_sprite(void){
+void graphics_shift_sprite(int powerup_state){
 	//check if sprite is jumping, if yes - shift sprite
 	if(jump && powerup_state!=BOOST_STATE){
 		if(inc){
@@ -516,7 +462,7 @@ void graphics_shift_back(void){
 	}
 }
 
-void graphics_jump(void){
+void graphics_jump(int powerup_state){
 	//checking if cat is already jumping
 	if(!jump && powerup_state!=BOOST_STATE){
 	//if no: begin jump
@@ -529,7 +475,7 @@ void graphics_jump(void){
 	}
 }
 
-int graphics_checkCollision(void){
+int graphics_checkCollision(int powerup_state){
 	//Calculating position of sprite on the map
 	int row = (y_pos_sprite+bg_shift_main)/8;
 	if(row>63) row-=64;
@@ -542,7 +488,7 @@ int graphics_checkCollision(void){
 	}
 	//no collision or pickup in boost state
 	if(powerup_state==BOOST_STATE){
-		return 0;
+		return NONECOL;
 	}
 	//Checking if map entry at sprite postion is empty
 	if(obstMap[row*32+col]&(0x03ff)||obstMap[(row+1)*32+col]&(0x03ff)
@@ -556,7 +502,7 @@ int graphics_checkCollision(void){
 				||((obstMap[(row+4)*32+col]&(0xf000))==SLOWMO_PAL)){
 			//delete the picked up powerup
 			graphics_clearPowerup(row);
-			graphics_pickupPowerup(SLOWMO);
+			return SLOWMOCOL;
 		}else if(((obstMap[row*32+col]&(0xf000))==BOOST_PAL)
 				||((obstMap[(row+1)*32+col]&(0xf000))==BOOST_PAL)
 				||((obstMap[(row+2)*32+col]&(0xf000))==BOOST_PAL)
@@ -564,7 +510,7 @@ int graphics_checkCollision(void){
 				||((obstMap[(row+4)*32+col]&(0xf000))==BOOST_PAL)){
 			//delete the picked up powerup
 			graphics_clearPowerup(row);
-			graphics_pickupPowerup(BOOST);
+			return BOOSTCOL;
 		}else if(((obstMap[row*32+col]&(0xf000))==SHIELD_PAL)
 				||((obstMap[(row+1)*32+col]&(0xf000))==SHIELD_PAL)
 				||((obstMap[(row+2)*32+col]&(0xf000))==SHIELD_PAL)
@@ -572,16 +518,16 @@ int graphics_checkCollision(void){
 				||((obstMap[(row+4)*32+col]&(0xf000))==SHIELD_PAL)){
 			//delete the picked up powerup
 			graphics_clearPowerup(row);
-			graphics_pickupPowerup(SHIELD);
+			return SHIELDCOL;
 		}else if(powerup_state!=SHIELD_STATE && powerup_state!=MINI_SHIELD_STATE){
-			return 1;
+			return OBSTACLECOL;
 		}
 		/*printf("\nrow: %d, col: %d\nMap:%x,%x,%x,%x,%x\n",row,col,
 				obstMap[row*32+col],obstMap[(row+1)*32+col],
 				obstMap[(row+2)*32+col],obstMap[(row+3)*32+col],
 		        obstMap[(row+4)*32+col]);*/
 	}
-	return 0;
+	return NONECOL;
 }
 
 void graphics_game_over(void){
@@ -638,67 +584,6 @@ void graphics_clearPowerup(int row){
 	}
 }
 
-void graphics_pickupPowerup(enum POWERUP_TYPE type){
-	if(powerup_state!=BOOST_STATE){
-		switch(type){
-		case SLOWMO: 	slowmo_count++;
-						printf("\nslowmo_count: %d\n",slowmo_count);
-						break;
-		case BOOST: 	boost_count++;
-						printf("\nboost_count: %d\n",boost_count);
-						break;
-		case SHIELD: 	shield_count++;
-						printf("\nshield_count: %d\n",shield_count);
-						break;
-		default:		break;
-		}
-	}
-}
-
-void graphics_activateSlowmo(void){
-	if(slowmo_count && powerup_state!=SLOW_STATE && powerup_state!=BOOST_STATE){
-		if(powerup_state==SHIELD_STATE || powerup_state==MINI_SHIELD_STATE){
-			hide_sprite=false;
-			printf("\nShield deactivated\n");
-		}
-		slowmo_count--;
-		timer_startSlowmo();
-		powerup_cnt=0;
-		powerup_state=SLOW_STATE;
-		printf("\nSlowmo activated\nslowmo_count: %d",slowmo_count);
-	}
-}
-
-void graphics_activateBoost(void){
-	if(boost_count && powerup_state!=BOOST_STATE){
-		if(powerup_state==SLOW_STATE){
-			timer_endSlowmo();
-			printf("\nSlowmo deactivated\n");
-		}else if(powerup_state==SHIELD_STATE || powerup_state==MINI_SHIELD_STATE){
-			hide_sprite=false;
-			printf("\nShield deactivated\n");
-		}
-		boost_count--;
-		timer_startBoost();
-		powerup_cnt=0;
-		powerup_state=BOOST_STATE;
-		printf("\nBoost activated\nboost_count: %d\n",boost_count);
-	}
-}
-
-void graphics_activateShield(void){
-	if(shield_count && powerup_state!=SHIELD_STATE && powerup_state!=BOOST_STATE){
-		if(powerup_state==SLOW_STATE){
-			timer_endSlowmo();
-			printf("\nSlowmo deactivated\n");
-		}
-		shield_count--;
-		powerup_cnt=0;
-		powerup_state=SHIELD_STATE;
-		printf("\nShield activated\nshield_count: %d\n", shield_count);
-	}
-}
-
 void graphics_drawRainbow(void){
 	int row=y_pos_sprite/8+bg_shift_main/8+1;
 	int i,k, col_offset=14;
@@ -721,5 +606,16 @@ void graphics_clearRainbow(void){
 		for(k=0;k<4;k++){
 			mainMap[i*32+14+k]=0|WALL_PAL;
 		}
+	}
+}
+
+void graphics_setSpriteVisibility(int visible){
+	hide_sprite = visible;
+}
+
+void graphics_toggleRainbow(void){
+	if(!(bg_shift_main%8) && x_pos_sprite>105 && x_pos_sprite<119){
+		graphics_clearRainbow();
+		graphics_drawRainbow();
 	}
 }

@@ -47,12 +47,7 @@ Timer.o: /home/nds/files/workspace/NDS_Project/source/Timer.c \
   /opt/devkitPro/libnds/include/nds/arm9/videoGL.h \
   /opt/devkitPro/libnds/include/nds/arm9/sprite.h \
   /opt/devkitPro/libnds/include/nds/system.h \
-  /opt/devkitPro/libnds/include/nds/arm9/decompress.h \
-  /home/nds/files/workspace/NDS_Project/source/Audio.h \
-  /home/nds/files/workspace/NDS_Project/build/soundbank_bin.h \
-  /home/nds/files/workspace/NDS_Project/build/soundbank.h \
-  /opt/devkitPro/libnds/include/maxmod9.h \
-  /opt/devkitPro/libnds/include/mm_types.h
+  /opt/devkitPro/libnds/include/nds/arm9/decompress.h
 
 /home/nds/files/workspace/NDS_Project/source/Timer.h:
 
@@ -151,13 +146,3 @@ Timer.o: /home/nds/files/workspace/NDS_Project/source/Timer.c \
 /opt/devkitPro/libnds/include/nds/system.h:
 
 /opt/devkitPro/libnds/include/nds/arm9/decompress.h:
-
-/home/nds/files/workspace/NDS_Project/source/Audio.h:
-
-/home/nds/files/workspace/NDS_Project/build/soundbank_bin.h:
-
-/home/nds/files/workspace/NDS_Project/build/soundbank.h:
-
-/opt/devkitPro/libnds/include/maxmod9.h:
-
-/opt/devkitPro/libnds/include/mm_types.h:

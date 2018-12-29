@@ -6,7 +6,6 @@
  */
 
 #include "Timer.h"
-#include "Audio.h"
 
 int speed;
 
@@ -37,7 +36,6 @@ void timer_disable(void){
 
 void timer_startSlowmo(void){
 	speed=speed/2;
-	Audio_startSlowmo();
 	TIMER_DATA(0)=TIMER_FREQ_64(speed);
 	TIMER_DATA(1)=TIMER_FREQ_64(speed/5);
 	TIMER_DATA(2)=TIMER_FREQ_64(speed+100);
@@ -45,7 +43,6 @@ void timer_startSlowmo(void){
 
 void timer_endSlowmo(void){
 	speed=100;
-	Audio_endSlowmo();
 	TIMER_DATA(0)=TIMER_FREQ_64(speed);
 	TIMER_DATA(1)=TIMER_FREQ_64(speed/5);
 	TIMER_DATA(2)=TIMER_FREQ_64(speed+100);
@@ -53,7 +50,6 @@ void timer_endSlowmo(void){
 
 void timer_startBoost(void){
 	speed=speed*2;
-	Audio_startBoost();
 	TIMER_DATA(0)=TIMER_FREQ_64(speed);
 	TIMER_DATA(1)=TIMER_FREQ_64(speed/5);
 	TIMER_DATA(2)=TIMER_FREQ_64(speed+100);
@@ -61,7 +57,6 @@ void timer_startBoost(void){
 
 void timer_endBoost(void){
 	speed=100;
-	Audio_endBoost();
 	TIMER_DATA(0)=TIMER_FREQ_64(speed);
 	TIMER_DATA(1)=TIMER_FREQ_64(speed/5);
 	TIMER_DATA(2)=TIMER_FREQ_64(speed+100);
