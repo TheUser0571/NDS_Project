@@ -10,7 +10,12 @@
 
 #include <nds.h>
 
-
+//definition of powerup states
+enum POWERUP_STATE{NONE_STATE,SLOW_STATE,BOOST_STATE,SHIELD_STATE,MINI_SHIELD_STATE};
+//definition of collision report
+enum COLLISION_TYPE {SLOWMOCOL,BOOSTCOL,SHIELDCOL,OBSTACLECOL,NONECOL};
+//definition of powerup types
+enum POWERUP_TYPE{SLOWMO,BOOST,SHIELD};
 
 void graphics_update_map(int index);
 
@@ -28,20 +33,22 @@ void graphics_shift_main(void);
 
 void graphics_shift_back(void);
 
-void graphics_shift_sprite(void);
+void graphics_shift_sprite(int powerup_state);
 
-void graphics_jump(void);
+void graphics_jump(int powerup_state);
 
-int graphics_checkCollision(void);
+int  graphics_checkCollision(int powerup_state);
 
 void graphics_game_over(void);
 
 void graphics_updateScreen(void);
 
-void graphics_activateSlowmo(void);
+void graphics_drawRainbow(void);
 
-void graphics_activateBoost(void);
+void graphics_clearRainbow(void);
 
-void graphics_activateShield(void);
+void graphics_setSpriteVisibility(int visible);
+
+void graphics_toggleRainbow(void);
 
 #endif /* GRAPHICS_H_ */
