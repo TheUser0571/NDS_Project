@@ -12,6 +12,7 @@
 #include "Graphics.h"
 #include "Audio.h"
 #include "Timer.h"
+#include "Score.h"
 
 //powerup definitions
 int powerup_cnt=0;
@@ -35,7 +36,7 @@ void game_shift_sprite(){
 	graphics_shift_sprite(powerup_state);
 }
 
-void game_init(void){
+void game_start(void){
 	game_state=ACTIVE;
 	powerup_state=NONE_STATE;
 	//Init powerup time count
@@ -66,7 +67,7 @@ void game_checkInput(void){
 	if(keysDown()==KEY_A||keysHeld()==KEY_A){
 		graphics_jump(powerup_state);
 	}else if(keysDown()==KEY_START){
-		game_init();
+		game_start();
 	}else if(keysDown()==KEY_B){
 		game_activateSlowmo();
 	}else if(keysDown()==KEY_X){
@@ -194,11 +195,21 @@ void game_shift_main(){
 		case OBSTACLECOL:
 			timer_disable();
 			graphics_game_over();
+			Score_insertResult();
+			game_state = GAMEOVER;
 			break;
 		case NONECOL:
 			break;
 	}
 
+	//Increase score counter
+	if(game_state == ACTIVE) Score_increase();
+
 	//Shift main
 	graphics_shift_main();
+}
+
+
+void game_loadScore(void) {
+	Score_readFile();
 }

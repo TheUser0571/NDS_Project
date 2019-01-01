@@ -53,7 +53,8 @@ game.o: /home/nds/files/workspace/NDS_Project/source/game.c \
   /home/nds/files/workspace/NDS_Project/build/soundbank.h \
   /opt/devkitPro/libnds/include/maxmod9.h \
   /opt/devkitPro/libnds/include/mm_types.h \
-  /home/nds/files/workspace/NDS_Project/source/Timer.h
+  /home/nds/files/workspace/NDS_Project/source/Timer.h \
+  /home/nds/files/workspace/NDS_Project/source/Score.h
 
 /opt/devkitPro/libnds/include/nds.h:
 
@@ -164,3 +165,5 @@ game.o: /home/nds/files/workspace/NDS_Project/source/game.c \
 /opt/devkitPro/libnds/include/mm_types.h:
 
 /home/nds/files/workspace/NDS_Project/source/Timer.h:
+
+/home/nds/files/workspace/NDS_Project/source/Score.h:

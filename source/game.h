@@ -8,10 +8,12 @@
 #ifndef GAME_H_
 #define GAME_H_
 
-void game_init(void);
+void game_start(void);
 
 void game_checkInput(void);
 
 void game_play(void);
+
+void game_loadScore(void);
 
 #endif /* GAME_H_ */
