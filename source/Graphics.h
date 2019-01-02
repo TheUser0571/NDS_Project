@@ -29,6 +29,12 @@ void graphics_setup_BG1(void);
 
 void graphics_setup_BG2(void);
 
+void graphics_setupBG2_sub(void);
+
+void graphics_setupBG1_sub(void);
+
+void graphics_drawNumber(int row_offset, int col_offset, int number);
+
 void graphics_shift_main(void);
 
 void graphics_shift_back(void);
@@ -50,5 +56,11 @@ void graphics_clearRainbow(void);
 void graphics_setSpriteVisibility(int visible);
 
 void graphics_toggleRainbow(void);
+
+void graphics_updatePoints(int points);
+
+void graphics_drawNum(enum POWERUP_TYPE type, int num);
+
+void graphics_setConsole(enum POWERUP_TYPE type);
 
 #endif /* GRAPHICS_H_ */

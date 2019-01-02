@@ -20,6 +20,12 @@
 #include "rainbow.h"
 #include "shield.h"
 #include "rainbow2.h"
+#include "numbers.h"
+#include "big_rainbow.h"
+#include "big_shield.h"
+#include "big_clock.h"
+#include "nums.h"
+
 
 #define SIMULATION
 
@@ -33,15 +39,26 @@
 #define BOOST_PAL (0xd<<12) //palette for boost powerup
 #define SHIELD_PAL (0xf<<12) //palette for shield powerup
 #define RAINBOW_PAL (0x9<<12) //palette for rainbow at boost
+#define NUMBERS_PAL_SUB (0xa<<12) //palette for numbers
+#define BIG_CLOCK_PAL_SUB (0xb<<12)
+#define BIG_RAINBOW_PAL_SUB (0xc<<12)
+#define BIG_SHIELD_PAL_SUB (0xd<<12)
+#define NUMS_PAL_SUB (0xe<<12)
 #define WALL_PAL_OFFSET 0xa0
 #define OBST_PAL_OFFSET 0xe0
 #define BOOST_PAL_OFFSET 0xd0
 #define SLOMO_PAL_OFFSET 0xb0
 #define SHIELD_PAL_OFFSET 0xf0
+#define NUMBERS_PAL_SUB_OFFSET 0xa0
+#define BIG_CLOCK_PAL_SUB_OFFSET 0xb0
+#define BIG_RAINBOW_PAL_SUB_OFFSET 0xc0
+#define BIG_SHIELD_PAL_SUB_OFFSET 0xd0
+#define NUMS_PAL_SUB_OFFSET 0xe0
 #define GO_PAL_OFFSET 0xc0
 #define RAINBOW_PAL_OFFSET 0x90
 #define GO_OFFSET 17
 #define RAINBOW_OFFSET 210
+#define BUTTON_OFFSET 100
 
 //definition of tile numbers
 enum TileNum{Transp, Floor, Gray};
@@ -63,15 +80,17 @@ int speed = 100;
 //initial graphic to display for graphic
 int cat_state=1;
 //map pointers
-u16* mainMap, *backMap, *obstMap;
+u16* mainMap, *backMap, *obstMap, *backMap_sub, *mainMap_sub;
 //tiles pointers
-u16* backTiles, *mainTiles, *obstTiles;
+u16* backTiles, *mainTiles, *obstTiles, *backTiles_sub, *mainTiles_sub;
 //sprite graphics pointers
 u16* gfx1=NULL, *gfx2=NULL, *gfx3=NULL, *gfx_active=NULL;
 int gfx_cnt=0;
 int obst_cnt=1;
 //powerup definitions
 int hide_count=0;
+//cosole for timer display
+PrintConsole console;
 //cutom tiles
 u8 FullTileTransp[32]={0,0,0,0,
 					   0,0,0,0,
@@ -81,6 +100,15 @@ u8 FullTileTransp[32]={0,0,0,0,
 					   0,0,0,0,
 					   0,0,0,0,
 					   0,0,0,0,};
+
+u8 FullTileWhite[32]={0xff,0xff,0xff,0xff,
+					  0xff,0xff,0xff,0xff,
+					  0xff,0xff,0xff,0xff,
+					  0xff,0xff,0xff,0xff,
+					  0xff,0xff,0xff,0xff,
+					  0xff,0xff,0xff,0xff,
+					  0xff,0xff,0xff,0xff,
+					  0xff,0xff,0xff,0xff};
 
 void graphics_build(enum OBSTACLE_TYPE obstacle, int row, int index);
 void graphics_addPowerup(enum POWERUP_TYPE type, int row, int index);
@@ -101,29 +129,47 @@ void graphics_init(void){
 	gfx_cnt=0;
 	obst_cnt =1;
 	hide_count=0;
-	//Enable VRAM A
+	//Enable VRAM A for main screen
 	VRAM_A_CR = VRAM_ENABLE| VRAM_A_MAIN_BG;
+	//Vram C for sub screen
+	VRAM_C_CR = VRAM_ENABLE|VRAM_C_SUB_BG;
 	//VRAM B for sprite
 	VRAM_B_CR = VRAM_ENABLE|VRAM_B_MAIN_SPRITE_0x06400000;
 
 	//Set mode and background
 	REG_DISPCNT = MODE_3_2D|DISPLAY_BG0_ACTIVE|DISPLAY_BG1_ACTIVE|DISPLAY_BG2_ACTIVE;
+	REG_DISPCNT_SUB = MODE_3_2D|DISPLAY_BG2_ACTIVE|DISPLAY_BG1_ACTIVE|DISPLAY_BG0_ACTIVE;
 
 	//initializing BG control
 	BGCTRL[1] = BG_32x64|BG_COLOR_16|BG_MAP_BASE(0)|BG_TILE_BASE(1);
 	BGCTRL[2] = BG_32x64|BG_COLOR_16|BG_MAP_BASE(2)|BG_TILE_BASE(2);
 	BGCTRL[0] = BG_32x64|BG_COLOR_16|BG_MAP_BASE(4)|BG_TILE_BASE(3);
+	BGCTRL_SUB[2] = BG_32x32|BG_COLOR_16|BG_MAP_BASE(0)|BG_TILE_BASE(1);
+	BGCTRL_SUB[1] = BG_32x32|BG_COLOR_16|BG_MAP_BASE(1)|BG_TILE_BASE(2);
 
 	//setting map pointers
 	mainMap = BG_MAP_RAM(0);
 	backMap = BG_MAP_RAM(2);
 	obstMap = BG_MAP_RAM(4);
+	backMap_sub = BG_MAP_RAM_SUB(0);
+	mainMap_sub = BG_MAP_RAM_SUB(1);
 
 	//setting tile pointers
 	mainTiles = BG_TILE_RAM(1);
 	backTiles = BG_TILE_RAM(2);
 	obstTiles = BG_TILE_RAM(3);
+	backTiles_sub = BG_TILE_RAM_SUB(1);
+	mainTiles_sub = BG_TILE_RAM_SUB(2);
 
+	//initializing console for timer display
+	consoleInit(&console, //console
+				0, //BG layer
+				BgType_Text4bpp, //BG type
+				BgSize_T_256x256, //BG size
+				2, //map base
+				5, //tile base
+				false, //main engine
+				true); //default font
 }
 
 void graphics_init_sprite(void){
@@ -264,6 +310,63 @@ void graphics_setup_BG0(void){
 		}
 	}
 
+}
+
+void graphics_setupBG2_sub(void){
+	//defining palette and tiles
+	BG_PALETTE_SUB[0x0f]=ARGB16(1,31,31,31); //white
+	dmaCopy(FullTileWhite,backTiles_sub,32); //0=full white tile
+	dmaCopy(big_clockPal,&BG_PALETTE_SUB[BIG_CLOCK_PAL_SUB_OFFSET],big_clockPalLen);
+	dmaCopy(big_clockTiles, &backTiles_sub[TILE_OFFSET],big_clockTilesLen);
+	dmaCopy(big_rainbowPal,&BG_PALETTE_SUB[BIG_RAINBOW_PAL_SUB_OFFSET],big_rainbowPalLen);
+	dmaCopy(big_rainbowTiles, &backTiles_sub[TILE_OFFSET*(1+BUTTON_OFFSET)],big_rainbowTilesLen);
+	dmaCopy(big_shieldPal,&BG_PALETTE_SUB[BIG_SHIELD_PAL_SUB_OFFSET],big_shieldPalLen);
+	dmaCopy(big_shieldTiles,&backTiles_sub[TILE_OFFSET*(1+2*BUTTON_OFFSET)],big_shieldTilesLen);
+	//initializing map to all-white
+	int row,col;
+	for(row=0;row<32;row++){
+		for(col=0;col<32;col++){
+			backMap_sub[row*32+col]=0;
+		}
+	}
+	//drawing slowmo button
+	for(row=0;row<10;row++){
+		for(col=0;col<10;col++){
+			backMap_sub[(row+13)*32+col]=(row*10+col+1)|BIG_CLOCK_PAL_SUB;
+		}
+	}
+	//drawing boost button
+	for(row=0;row<10;row++){
+		for(col=0;col<10;col++){
+			backMap_sub[(row+13)*32+col+11]=(row*10+col+101)|BIG_RAINBOW_PAL_SUB;
+		}
+	}
+	//drawing shield button
+	for(row=0;row<10;row++){
+		for(col=0;col<10;col++){
+			backMap_sub[(row+13)*32+col+22]=(row*10+col+201)|BIG_SHIELD_PAL_SUB;
+		}
+	}
+}
+
+void graphics_setupBG1_sub(void){
+	//copying palette and tiles
+	dmaCopy(FullTileTransp,mainTiles_sub,32);
+	dmaCopy(numbersTiles,&mainTiles_sub[TILE_OFFSET],numbersTilesLen);
+	dmaCopy(numsPal,&BG_PALETTE_SUB[NUMS_PAL_SUB_OFFSET],numsPalLen);
+	dmaCopy(numsTiles,&mainTiles_sub[TILE_OFFSET*(1+352)],numsTilesLen);
+	//dmaCopy(numbersPal,&BG_PALETTE_SUB[NUMBERS_PAL_SUB_OFFSET],numbersPalLen);
+	BG_PALETTE_SUB[0xaf]=ARGB16(1,5,0,31); //making numbers blue
+	//initializing map to transparent
+	int row,col;
+	for(row=0;row<32;row++){
+		for(col=0;col<32;col++){
+			mainMap_sub[row*32+col]=0;
+		}
+	}
+	graphics_drawNum(SLOWMO,0);
+	graphics_drawNum(BOOST,0);
+	graphics_drawNum(SHIELD,0);
 }
 
 void graphics_build(enum OBSTACLE_TYPE obstacle, int row, int index){
@@ -478,7 +581,6 @@ void graphics_jump(int powerup_state){
 int graphics_checkCollision(int powerup_state){
 	//Calculating position of sprite on the map
 	int row = (y_pos_sprite+bg_shift_main)/8;
-	if(row>63) row-=64;
 	int col=x_pos_sprite/8;
 	//accounting for rotation
 	if(cat_rot){
@@ -490,42 +592,28 @@ int graphics_checkCollision(int powerup_state){
 	if(powerup_state==BOOST_STATE){
 		return NONECOL;
 	}
-	//Checking if map entry at sprite postion is empty
-	if(obstMap[row*32+col]&(0x03ff)||obstMap[(row+1)*32+col]&(0x03ff)
-		||obstMap[(row+2)*32+col]&(0x03ff)||obstMap[(row+3)*32+col]&(0x03ff)
-		||obstMap[(row+4)*32+col]&(0x03ff)){
-		//if not: check for powerup
-		if(((obstMap[row*32+col]&(0xf000))==SLOWMO_PAL)
-				||((obstMap[(row+1)*32+col]&(0xf000))==SLOWMO_PAL)
-				||((obstMap[(row+2)*32+col]&(0xf000))==SLOWMO_PAL)
-				||((obstMap[(row+3)*32+col]&(0xf000))==SLOWMO_PAL)
-				||((obstMap[(row+4)*32+col]&(0xf000))==SLOWMO_PAL)){
-			//delete the picked up powerup
-			graphics_clearPowerup(row);
-			return SLOWMOCOL;
-		}else if(((obstMap[row*32+col]&(0xf000))==BOOST_PAL)
-				||((obstMap[(row+1)*32+col]&(0xf000))==BOOST_PAL)
-				||((obstMap[(row+2)*32+col]&(0xf000))==BOOST_PAL)
-				||((obstMap[(row+3)*32+col]&(0xf000))==BOOST_PAL)
-				||((obstMap[(row+4)*32+col]&(0xf000))==BOOST_PAL)){
-			//delete the picked up powerup
-			graphics_clearPowerup(row);
-			return BOOSTCOL;
-		}else if(((obstMap[row*32+col]&(0xf000))==SHIELD_PAL)
-				||((obstMap[(row+1)*32+col]&(0xf000))==SHIELD_PAL)
-				||((obstMap[(row+2)*32+col]&(0xf000))==SHIELD_PAL)
-				||((obstMap[(row+3)*32+col]&(0xf000))==SHIELD_PAL)
-				||((obstMap[(row+4)*32+col]&(0xf000))==SHIELD_PAL)){
-			//delete the picked up powerup
-			graphics_clearPowerup(row);
-			return SHIELDCOL;
-		}else if(powerup_state!=SHIELD_STATE && powerup_state!=MINI_SHIELD_STATE){
-			return OBSTACLECOL;
+	int i;
+	for(i=0;i<4;i++){
+		//accounting for map end
+		if((row+i)>63) row-=64;
+		//Checking if map entry at sprite postion is empty
+		if(obstMap[(row+i)*32+col]&(0x03ff)){
+			//if not: check for powerup
+			if((obstMap[(row+i)*32+col]&(0xf000))==SLOWMO_PAL){
+				//delete the picked up powerup
+				graphics_clearPowerup(row);
+				return SLOWMOCOL;
+			}else if((obstMap[(row+i)*32+col]&(0xf000))==BOOST_PAL){
+				graphics_clearPowerup(row);
+				return BOOSTCOL;
+			}else if((obstMap[(row+i)*32+col]&(0xf000))==SHIELD_PAL){
+				graphics_clearPowerup(row);
+				return SHIELDCOL;
+			//if no powerup return obstacle
+			}else if(powerup_state!=SHIELD_STATE && powerup_state!=MINI_SHIELD_STATE){
+				return OBSTACLECOL;
+			}
 		}
-		/*printf("\nrow: %d, col: %d\nMap:%x,%x,%x,%x,%x\n",row,col,
-				obstMap[row*32+col],obstMap[(row+1)*32+col],
-				obstMap[(row+2)*32+col],obstMap[(row+3)*32+col],
-		        obstMap[(row+4)*32+col]);*/
 	}
 	return NONECOL;
 }
@@ -545,6 +633,8 @@ void graphics_game_over(void){
 			}
 		}
 	}
+	//TODO: display scoreboard
+	//...
 }
 void graphics_updateScreen(void){
 	//shifting backgrounds and sprite
@@ -617,5 +707,87 @@ void graphics_toggleRainbow(void){
 	if(!(bg_shift_main%8) && x_pos_sprite>105 && x_pos_sprite<119){
 		graphics_clearRainbow();
 		graphics_drawRainbow();
+	}
+}
+
+void graphics_drawNumber(int row_offset, int col_offset, int number){
+	int row,col;
+	if(row_offset<0||row_offset>23||col_offset<0||col_offset>27) return;
+	for(row=0;row<8;row++){
+		for(col=0;col<4;col++){
+			mainMap_sub[(row+row_offset)*32+col+col_offset]=((4*8*number)+row*4+col+1)|NUMBERS_PAL_SUB;
+		}
+	}
+}
+
+void graphics_updatePoints(int points){
+	int pts[5];
+	pts[0]=points/10000;
+	points%=10000;
+	pts[1]=points/1000;
+	points%=1000;
+	pts[2]=points/100;
+	points%=100;
+	pts[3]=points/10;
+	points%=10;
+	pts[4]=points;
+	int col,num=0;
+	for(col=0;col<20;col+=4){
+		graphics_drawNumber(2,col+6,pts[num]);
+		num++;
+	}
+}
+
+void graphics_drawNum(enum POWERUP_TYPE type, int num){
+	if(num>9){
+		num=9;
+	}
+	int offset=0;
+	if(num%2){
+		offset=(num/2)*8+2;
+	}else{
+		offset=(num/2)*8;
+	}
+	switch(type){
+	case SLOWMO:	mainMap_sub[13*32+8]=(353+offset)|NUMS_PAL_SUB;
+					mainMap_sub[13*32+9]=(354+offset)|NUMS_PAL_SUB;
+					mainMap_sub[14*32+8]=(357+offset)|NUMS_PAL_SUB;
+					mainMap_sub[14*32+9]=(358+offset)|NUMS_PAL_SUB;
+					break;
+	case BOOST:		mainMap_sub[13*32+19]=(353+offset)|NUMS_PAL_SUB;
+					mainMap_sub[13*32+20]=(354+offset)|NUMS_PAL_SUB;
+					mainMap_sub[14*32+19]=(357+offset)|NUMS_PAL_SUB;
+					mainMap_sub[14*32+20]=(358+offset)|NUMS_PAL_SUB;
+					break;
+	case SHIELD:	mainMap_sub[13*32+30]=(353+offset)|NUMS_PAL_SUB;
+					mainMap_sub[13*32+31]=(354+offset)|NUMS_PAL_SUB;
+					mainMap_sub[14*32+30]=(357+offset)|NUMS_PAL_SUB;
+					mainMap_sub[14*32+31]=(358+offset)|NUMS_PAL_SUB;
+					break;
+	default:		break;
+
+	}
+}
+
+void graphics_setConsole(enum POWERUP_TYPE type){
+	switch(type){
+	case SLOWMO:	consoleSetWindow(&console, //console
+									 3, //x
+									 19, //y
+									 5, //with
+									 1); //height
+					break;
+	case BOOST:		consoleSetWindow(&console, //console
+									 14, //x
+									 18, //y
+									 5, //with
+									 1); //height
+					break;
+	case SHIELD:	consoleSetWindow(&console, //console
+									 25, //x
+									 18, //y
+									 5, //with
+									 1); //height
+					break;
 	}
 }

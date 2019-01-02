@@ -14,7 +14,7 @@
 
 int main(void){
 	//initializing console for debugging
-	consoleDemoInit();
+	//consoleDemoInit();
 	//Initializing rand seed with current time
 	srand(clock());
 	game_init();

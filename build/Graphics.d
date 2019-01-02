@@ -59,7 +59,12 @@ Graphics.o: /home/nds/files/workspace/NDS_Project/source/Graphics.c \
   /home/nds/files/workspace/NDS_Project/build/clock.h \
   /home/nds/files/workspace/NDS_Project/build/rainbow.h \
   /home/nds/files/workspace/NDS_Project/build/shield.h \
-  /home/nds/files/workspace/NDS_Project/build/rainbow2.h
+  /home/nds/files/workspace/NDS_Project/build/rainbow2.h \
+  /home/nds/files/workspace/NDS_Project/build/numbers.h \
+  /home/nds/files/workspace/NDS_Project/build/big_rainbow.h \
+  /home/nds/files/workspace/NDS_Project/build/big_shield.h \
+  /home/nds/files/workspace/NDS_Project/build/big_clock.h \
+  /home/nds/files/workspace/NDS_Project/build/nums.h
 
 /opt/devkitPro/libnds/include/nds.h:
 
@@ -182,3 +187,13 @@ Graphics.o: /home/nds/files/workspace/NDS_Project/source/Graphics.c \
 /home/nds/files/workspace/NDS_Project/build/shield.h:
 
 /home/nds/files/workspace/NDS_Project/build/rainbow2.h:
+
+/home/nds/files/workspace/NDS_Project/build/numbers.h:
+
+/home/nds/files/workspace/NDS_Project/build/big_rainbow.h:
+
+/home/nds/files/workspace/NDS_Project/build/big_shield.h:
+
+/home/nds/files/workspace/NDS_Project/build/big_clock.h:
+
+/home/nds/files/workspace/NDS_Project/build/nums.h:

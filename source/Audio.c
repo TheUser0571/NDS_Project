@@ -14,7 +14,7 @@ mm_sfxhand shieldHand;
 void Audio_Init()
 {
 	//Init the sound library
-	mmInitDefaultMem(soundbank_bin);
+	mmInitDefaultMem(&soundbank_bin);
 	//Load module
 	mmLoad(MOD_DIPPYHAPPYPLAINS);
 	//Load effects
