@@ -18,6 +18,7 @@ void Audio_Init(void)
 	mmLoad(MOD_DIPPYHAPPYPLAINS);
 	//Load effects
 	mmLoadEffect(SFX_NYANSHORT);
+	mmLoadEffect(SFX_PICKUP);
 }
 
 void Audio_PlayMusic(void)
