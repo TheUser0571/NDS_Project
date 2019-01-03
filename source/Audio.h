@@ -17,11 +17,12 @@
 #ifndef AUDIO_H_
 #define AUDIO_H_
 
-void Audio_Init();
-void Audio_PlayMusic();
-void Audio_startBoost();
-void Audio_endBoost();
-void Audio_startSlowmo();
-void Audio_endSlowmo();
+void Audio_Init(void);
+void Audio_PlayMusic(void);
+void Audio_startBoost(void);
+void Audio_endBoost(void);
+void Audio_startSlowmo(void);
+void Audio_endSlowmo(void);
+void Audio_pickup(void);
 
 #endif /* AUDIO_H_ */

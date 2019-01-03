@@ -9,9 +9,8 @@
 
 mm_sfxhand boostHand;
 mm_sfxhand slowmoHand;
-mm_sfxhand shieldHand;
 
-void Audio_Init()
+void Audio_Init(void)
 {
 	//Init the sound library
 	mmInitDefaultMem(&soundbank_bin);
@@ -21,16 +20,23 @@ void Audio_Init()
 	mmLoadEffect(SFX_NYANSHORT);
 }
 
-void Audio_PlayMusic()
+void Audio_PlayMusic(void)
 {
 	//Start playing music in a loop
 	mmStart(MOD_DIPPYHAPPYPLAINS,MM_PLAY_LOOP);
 	mmSetModuleVolume(512);
 }
 
-void Audio_startBoost(){
+void Audio_startBoost(void){
 	mmPause();
-	boostHand = mmEffect(SFX_NYANSHORT);
+	mm_sound_effect sound;
+	sound.id = SFX_NYANSHORT;
+	//Set the rate to the default one (1024)
+	sound.rate = 1024;
+	sound.volume = 255;
+	sound.panning = 127;
+	mmPause();
+	boostHand = mmEffectEx(&sound);
 }
 
 void Audio_endBoost(){
@@ -38,7 +44,7 @@ void Audio_endBoost(){
 	mmEffectCancel(boostHand);
 }
 
-void Audio_startSlowmo(){
+void Audio_startSlowmo(void){
 	mm_sound_effect sound;
 	sound.id = SFX_NYANSHORT;
 	//Set the rate to the default one (1024)
@@ -49,7 +55,11 @@ void Audio_startSlowmo(){
 	slowmoHand = mmEffectEx(&sound);
 }
 
-void Audio_endSlowmo(){
+void Audio_endSlowmo(void){
 	mmResume();
 	mmEffectCancel(slowmoHand);
+}
+
+void Audio_pickup(void){
+	mmEffect(SFX_PICKUP);
 }

@@ -1,5 +1,6 @@
 #define MOD_DIPPYHAPPYPLAINS	0
 #define SFX_NYANSHORT	31
+#define SFX_PICKUP	32
 #define MSL_NSONGS	1
-#define MSL_NSAMPS	32
-#define MSL_BANKSIZE	33
+#define MSL_NSAMPS	33
+#define MSL_BANKSIZE	34

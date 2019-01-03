@@ -27,14 +27,13 @@ void Score_writeFile(void) {
 		int i = 0;
 		for(i = 0; i < NBSCORES; i++) {
 			fprintf(file, "%i\n", scores[i]);
-			//debug
-			printf("score : %i\n", scores[i]);
 		}
 		fclose(file);
 	}
 }
 
 void Score_readFile(void) {
+	fatInitDefault();
 	FILE * file = fopen("/nyanscore.txt","r");
 	if(file!=NULL) {
 		int i = 0;
