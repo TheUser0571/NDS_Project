@@ -17,7 +17,8 @@ int main(void){
 	//consoleDemoInit();
 	//Initializing rand seed with current time
 	srand(clock());
-	game_init();
+	game_loadScore();
+	game_start();
     while(1) {
     	//wait for action
     	game_play();

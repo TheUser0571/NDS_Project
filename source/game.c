@@ -12,6 +12,7 @@
 #include "Graphics.h"
 #include "Audio.h"
 #include "Timer.h"
+#include "Score.h"
 
 //powerup definitions
 int powerup_cnt=0;
@@ -41,7 +42,7 @@ void game_shift_sprite(){
 	}
 }
 
-void game_init(void){
+void game_start(void){
 	game_state=ACTIVE;
 	powerup_state=NONE_STATE;
 	//Init powerup time count
@@ -79,7 +80,7 @@ void game_checkInput(void){
 	if((keysDown()==KEY_A||keysHeld()==KEY_A)&&game_state==ACTIVE){
 		graphics_jump(powerup_state);
 	}else if(keysDown()==KEY_START){
-		game_init();
+		game_start();
 	}else if(keysDown()==KEY_B&&game_state==ACTIVE){
 		game_activateSlowmo();
 	}else if(keysDown()==KEY_X&&game_state==ACTIVE){
@@ -240,35 +241,38 @@ void game_shift_main(){
 			}
 		}
 
-		//Checking for collision
-		switch(graphics_checkCollision(powerup_state)){
-			case SLOWMOCOL:
-				game_pickupPowerup(SLOWMO);
-				break;
-			case BOOSTCOL:
-				game_pickupPowerup(BOOST);
-				break;
-			case SHIELDCOL:
-				game_pickupPowerup(SHIELD);
-				break;
-			case OBSTACLECOL:
+	//Checking for collision
+	switch(graphics_checkCollision(powerup_state)){
+		case SLOWMOCOL:
+			game_pickupPowerup(SLOWMO);
+			break;
+		case BOOSTCOL:
+			game_pickupPowerup(BOOST);
+			break;
+		case SHIELDCOL:
+			game_pickupPowerup(SHIELD);
+			break;
+		case OBSTACLECOL:
+			Score_insertResult();
 				game_over();
-				break;
-			case NONECOL:
-				break;
-		}
-		//every 100ms update points
-		if(++points_count==10){
-			points_count=0;
-			graphics_updatePoints(++points);
-		}
-		//Shift main
-		graphics_shift_main();
+			break;
+		case NONECOL:
+			break;
 	}
 }
 
+	//Increase score counter
+	if(game_state == ACTIVE) Score_increase();
+
+	//Shift main
+	graphics_shift_main();
 void game_over(void){
 	timer_disable();
 	graphics_game_over();
 	game_state=GAMEOVER;
+}
+
+
+void game_loadScore(void) {
+	Score_readFile();
 }
