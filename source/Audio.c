@@ -13,11 +13,12 @@ mm_sfxhand slowmoHand;
 void Audio_Init(void)
 {
 	//Init the sound library
-	mmInitDefaultMem(&soundbank_bin);
+	mmInitDefaultMem((mm_addr)soundbank_bin);
 	//Load module
 	mmLoad(MOD_DIPPYHAPPYPLAINS);
 	//Load effects
 	mmLoadEffect(SFX_NYANSHORT);
+	mmLoadEffect(SFX_PICKUP);
 }
 
 void Audio_PlayMusic(void)

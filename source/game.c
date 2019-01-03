@@ -32,6 +32,7 @@ void game_activateBoost(void);
 void game_pickupPowerup(enum POWERUP_TYPE type);
 void game_shift_main(void);
 void game_over(void);
+void game_loadScore(void);
 
 void game_shift_back(){
 	if(game_state==ACTIVE){
