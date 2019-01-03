@@ -10,6 +10,7 @@
 
 void Score_readFile(void);
 void Score_insertResult(void);
-void Score_increase(void);
+int  Score_increase(int points);
+void Score_reset(void);
 
 #endif /* SCORE_H_ */

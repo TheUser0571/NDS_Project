@@ -619,6 +619,11 @@ int graphics_checkCollision(int powerup_state){
 }
 
 void graphics_game_over(void){
+	consoleClear();
+	consoleSetWindow(&console,  0, //x
+							    2, //y
+							   31, //with
+							   31);//height
 	int row, col, row_offset=5+bg_shift_main/8, col_offset=8;
 	for(row=0;row<12;row++){
 		for(col=0;col<16;col++){
@@ -633,8 +638,19 @@ void graphics_game_over(void){
 			}
 		}
 	}
-	//TODO: display scoreboard
-	//...
+
+	//initializing map to all-white
+	for(row=0;row<32;row++){
+		for(col=0;col<32;col++){
+			backMap_sub[row*32+col]=0;
+		}
+	}
+	//initializing map to transparent
+	for(row=0;row<32;row++){
+		for(col=0;col<32;col++){
+			mainMap_sub[row*32+col]=0;
+		}
+	}
 }
 void graphics_updateScreen(void){
 	//shifting backgrounds and sprite

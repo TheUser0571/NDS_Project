@@ -6,6 +6,7 @@
  */
 
 #include "Score.h"
+#include <nds.h>
 #include <string.h>
 #include <stdio.h>
 #include <fat.h>
@@ -39,8 +40,6 @@ void Score_readFile(void) {
 		int i = 0;
 		for(i = 0; i < NBSCORES; i++) {
 			fscanf(file, "%i\n", &scores[i]);
-			//debug
-			printf("read score : %i\n", scores[i]);
 		}
 		fclose(file);
 	}
@@ -49,8 +48,6 @@ void Score_readFile(void) {
 		for(i = 0; i < NBSCORES; i++) {
 			scores[i] = 0;
 		}
-		//debug
-		printf("init of scores\n");
 	}
 	position = NBSCORES;
 	score_cnt = 0;
@@ -59,8 +56,18 @@ void Score_readFile(void) {
 void Score_printscoreboard(void) {
 	int i = 0;
 	for(i = 0; i < NBSCORES; i++) {
-		printf("position %i : %i\n", i, scores[i]);
+		if		(scores[i] == score_cnt && i <  9)
+			printf("\x1b[31;1m\t\tposition %i : %i\n", i+1, scores[i]);
+		else if (scores[i] != score_cnt && i <  9)
+			printf("\x1b[30;1m\t\tposition %i : %i\n", i+1, scores[i]);
+		else if (scores[i] == score_cnt && i >= 9)
+			printf("\x1b[31;1m\t\tposition %i: %i\n", i+1, scores[i]);
+		else
+			printf("\x1b[30;1m\t\tposition %i: %i\n", i+1, scores[i]);
+
 	}
+	printf("\n Press Start for restarting\n the game\n\n");
+	printf(" Press X for resetting the\n scores\n\n");
 }
 
 void Score_insertResult(void) {
@@ -74,13 +81,13 @@ void Score_insertResult(void) {
 	}
 	Score_shifter(i, to_shift);
 	position = NBSCORES;
-	score_cnt = 0;
 	Score_writeFile();
 	Score_printscoreboard();
+	score_cnt = 0;
 }
 
-void Score_increase(void) {
-	score_cnt++;
+int Score_increase(int points) {
+	score_cnt+= points;
 	int i = 0;
 	for(i = 0; i < position; i++) {
 		//position changing detector
@@ -90,14 +97,27 @@ void Score_increase(void) {
 			break;
 		}
 	}
+	return score_cnt;
 }
 
 
-void Score_shifter(int i, int to_shift) {
+void Score_shifter(int i, int to_shift){
 	int j = 0, next;
 	for(j = i+1; j < NBSCORES; j++) {
 		next = scores[j];
 		scores[j] = to_shift;
 		to_shift = next;
+	}
+}
+
+
+void Score_reset(void){
+	int i;
+	if(scores[0] != 0){
+		printf("\n\tReset done");
+		for(i = 0; i < NBSCORES; i++) {
+			scores[i] = 0;
+		}
+		Score_writeFile();
 	}
 }

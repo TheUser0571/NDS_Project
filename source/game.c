@@ -22,6 +22,8 @@ int powerup_state=NONE_STATE;
 
 enum GameState{ACTIVE, GAMEOVER};
 
+enum Points{PICKUP = 50, DISTANCE = 1};
+
 int game_state=ACTIVE;
 
 void game_activateShield(void);
@@ -42,7 +44,7 @@ void game_shift_sprite(){
 	}
 }
 
-void game_start(void){
+void game_init(void){
 	game_state=ACTIVE;
 	powerup_state=NONE_STATE;
 	//Init powerup time count
@@ -80,11 +82,13 @@ void game_checkInput(void){
 	if((keysDown()==KEY_A||keysHeld()==KEY_A)&&game_state==ACTIVE){
 		graphics_jump(powerup_state);
 	}else if(keysDown()==KEY_START){
-		game_start();
+		game_init();
 	}else if(keysDown()==KEY_B&&game_state==ACTIVE){
 		game_activateSlowmo();
 	}else if(keysDown()==KEY_X&&game_state==ACTIVE){
 		game_activateBoost();
+	}else if(keysDown()==KEY_X&&game_state==GAMEOVER){
+		Score_reset();
 	}else if(keysDown()==KEY_Y&&game_state==ACTIVE){
 		game_activateShield();
 	}else if(keysDown()==KEY_TOUCH&&game_state==ACTIVE){
@@ -168,17 +172,17 @@ void game_pickupPowerup(enum POWERUP_TYPE type){
 	if(powerup_state!=BOOST_STATE){
 		switch(type){
 		case SLOWMO: 	slowmo_count++;
-						points+=50;
+						Score_increase(PICKUP);
 						graphics_drawNum(SLOWMO,slowmo_count);
 						//printf("\nslowmo_count: %d\n",slowmo_count);
 						break;
 		case BOOST: 	boost_count++;
-						points+=50;
+						Score_increase(PICKUP);
 						graphics_drawNum(BOOST,boost_count);
 						//printf("\nboost_count: %d\n",boost_count);
 						break;
 		case SHIELD: 	shield_count++;
-						points+=50;
+						Score_increase(PICKUP);
 						graphics_drawNum(SHIELD,shield_count);
 						//printf("\nshield_count: %d\n",shield_count);
 						break;
@@ -241,38 +245,41 @@ void game_shift_main(){
 			}
 		}
 
-	//Checking for collision
-	switch(graphics_checkCollision(powerup_state)){
-		case SLOWMOCOL:
-			game_pickupPowerup(SLOWMO);
-			break;
-		case BOOSTCOL:
-			game_pickupPowerup(BOOST);
-			break;
-		case SHIELDCOL:
-			game_pickupPowerup(SHIELD);
-			break;
-		case OBSTACLECOL:
-			Score_insertResult();
+		//Checking for collision
+		switch(graphics_checkCollision(powerup_state)){
+			case SLOWMOCOL:
+				game_pickupPowerup(SLOWMO);
+				break;
+			case BOOSTCOL:
+				game_pickupPowerup(BOOST);
+				break;
+			case SHIELDCOL:
+				game_pickupPowerup(SHIELD);
+				break;
+			case OBSTACLECOL:
 				game_over();
-			break;
-		case NONECOL:
-			break;
+				break;
+			case NONECOL:
+				break;
+		}
+		//every 100ms update points
+		if(++points_count==10){
+			points_count=0;
+			graphics_updatePoints(Score_increase(DISTANCE));
+		}
+		//Shift main
+		graphics_shift_main();
 	}
 }
 
-	//Increase score counter
-	if(game_state == ACTIVE) Score_increase();
-
-	//Shift main
-	graphics_shift_main();
 void game_over(void){
 	timer_disable();
 	graphics_game_over();
+	Score_insertResult();
 	game_state=GAMEOVER;
 }
 
 
-void game_loadScore(void) {
+void game_loadScore(void){
 	Score_readFile();
 }
