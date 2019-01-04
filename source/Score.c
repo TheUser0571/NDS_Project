@@ -65,8 +65,8 @@ void Score_printscoreboard(void) {
 			printf("\x1b[30;1m\t\tposition %i: %i\n", i+1, scores[i]);
 
 	}
-	printf("\n Press Start for restarting\n the game\n\n");
-	printf(" Press X for resetting the\n scores\n\n");
+	printf("\x1b[30;1m\n Press Start for restarting\n the game\n\n");
+	printf("\x1b[30;1m Press X for resetting the\n scores\n\n");
 }
 
 void Score_insertResult(void) {

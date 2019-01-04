@@ -162,6 +162,7 @@ void graphics_init(void){
 	mainTiles_sub = BG_TILE_RAM_SUB(2);
 
 	//initializing console for timer display
+	consoleClear();
 	consoleInit(&console, //console
 				0, //BG layer
 				BgType_Text4bpp, //BG type
@@ -645,12 +646,8 @@ void graphics_game_over(void){
 			backMap_sub[row*32+col]=0;
 		}
 	}
-	//initializing map to transparent
-	for(row=0;row<32;row++){
-		for(col=0;col<32;col++){
-			mainMap_sub[row*32+col]=0;
-		}
-	}
+	//deactivating BG1
+	REG_DISPCNT_SUB = MODE_3_2D|DISPLAY_BG2_ACTIVE|DISPLAY_BG0_ACTIVE;
 }
 void graphics_updateScreen(void){
 	//shifting backgrounds and sprite
