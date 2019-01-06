@@ -63,4 +63,8 @@ void graphics_drawNum(enum POWERUP_TYPE type, int num);
 
 void graphics_setConsole(enum POWERUP_TYPE type);
 
+void graphics_initKeyboard(void);
+
+void graphics_dispName(char *name,int NAME_MAX);
+
 #endif /* GRAPHICS_H_ */
