@@ -116,13 +116,11 @@ void game_activateShield(void){
 		if(powerup_state==SLOW_STATE){
 			Audio_endSlowmo();
 			timer_endSlowmo();
-			//printf("\nSlowmo deactivated\n");
 		}
 		shield_count--;
 		graphics_drawNum(SHIELD,shield_count);
 		powerup_cnt=0;
 		powerup_state=SHIELD_STATE;
-		//printf("\nShield activated\nshield_count: %d\n", shield_count);
 		consoleClear();
 		graphics_setConsole(SHIELD);
 	}
@@ -132,7 +130,6 @@ void game_activateSlowmo(void){
 	if(slowmo_count && powerup_state!=SLOW_STATE && powerup_state!=BOOST_STATE){
 		if(powerup_state==SHIELD_STATE || powerup_state==MINI_SHIELD_STATE){
 			graphics_setSpriteVisibility(false);
-			//printf("\nShield deactivated\n");
 		}
 
 		slowmo_count--;
@@ -141,7 +138,6 @@ void game_activateSlowmo(void){
 		graphics_drawNum(SLOWMO,slowmo_count);
 		powerup_cnt=0;
 		powerup_state=SLOW_STATE;
-		//printf("\nSlowmo activated\nslowmo_count: %d",slowmo_count);
 		consoleClear();
 		graphics_setConsole(SLOWMO);
 	}
@@ -152,10 +148,8 @@ void game_activateBoost(void){
 		if(powerup_state==SLOW_STATE){
 			Audio_endSlowmo();
 			timer_endSlowmo();
-			//printf("\nSlowmo deactivated\n");
 		}else if(powerup_state==SHIELD_STATE || powerup_state==MINI_SHIELD_STATE){
 			graphics_setSpriteVisibility(false);
-			//printf("\nShield deactivated\n");
 		}
 		boost_count--;
 		timer_startBoost();
@@ -163,7 +157,6 @@ void game_activateBoost(void){
 		graphics_drawNum(BOOST,boost_count);
 		powerup_cnt=0;
 		powerup_state=BOOST_STATE;
-		//printf("\nBoost activated\nboost_count: %d\n",boost_count);
 		consoleClear();
 		graphics_setConsole(BOOST);
 	}
@@ -176,19 +169,16 @@ void game_pickupPowerup(enum POWERUP_TYPE type){
 						Score_increase(PICKUP);
 						graphics_drawNum(SLOWMO,slowmo_count);
 						Audio_pickup();
-						//printf("\nslowmo_count: %d\n",slowmo_count);
 						break;
 		case BOOST: 	boost_count++;
 						Score_increase(PICKUP);
 						graphics_drawNum(BOOST,boost_count);
 						Audio_pickup();
-						//printf("\nboost_count: %d\n",boost_count);
 						break;
 		case SHIELD: 	shield_count++;
 						Score_increase(PICKUP);
 						graphics_drawNum(SHIELD,shield_count);
 						Audio_pickup();
-						//printf("\nshield_count: %d\n",shield_count);
 						break;
 		default:		break;
 		}
@@ -207,7 +197,6 @@ void game_shift_main(){
 					timer_endSlowmo();
 					powerup_cnt=0;
 					powerup_state=NONE_STATE;
-					//printf("\nSlowmo deactivated\n");
 				}else{
 					int time = 50-powerup_cnt/5;
 					printf("\x1b[31;1m%d.%ds",time/10,time%10);
@@ -220,7 +209,6 @@ void game_shift_main(){
 					powerup_cnt=0;
 					powerup_state=MINI_SHIELD_STATE;
 					graphics_clearRainbow();
-					//printf("\nBoost deactivated\n");
 					consoleClear();
 					graphics_setConsole(SHIELD);
 				}else{
@@ -232,7 +220,6 @@ void game_shift_main(){
 					powerup_cnt=0;
 					powerup_state=NONE_STATE;
 					graphics_setSpriteVisibility(false);
-					//printf("\nShield deactivated\n");
 				}else{
 					int time = 40-powerup_cnt/10;
 					printf("\x1b[31;1m%d.%ds",time/10,time%10);
@@ -292,6 +279,152 @@ void game_welcomeScreen(void){
 	//TODO
 }
 
-void game_nameAcquisition(char *name, int NAME_MAX){
+int game_updateName(char *name,touchPosition pos,int position,int NAME_MAX){
+	int x=pos.px, y=pos.py;
+	if(y>37 && y<69){
+		if(x<24 && position<NAME_MAX){
+			name[position]='1';
+			return ++position;
+		}else if(x<50 && position<NAME_MAX){
+			name[position]='2';
+			return ++position;
+		}else if(x<76 && position<NAME_MAX){
+			name[position]='3';
+			return ++position;
+		}else if(x<102 && position<NAME_MAX){
+			name[position]='4';
+			return ++position;
+		}else if(x<128 && position<NAME_MAX){
+			name[position]='5';
+			return ++position;
+		}else if(x<154 && position<NAME_MAX){
+			name[position]='6';
+			return ++position;
+		}else if(x<180 && position<NAME_MAX){
+			name[position]='7';
+			return ++position;
+		}else if(x<209 && position<NAME_MAX){
+			name[position]='8';
+			return ++position;
+		}else if(x<237 && position<NAME_MAX){
+			name[position]='9';
+			return ++position;
+		}else if(x<256 && position<NAME_MAX){
+			name[position]='0';
+			return ++position;
+		}
+	}else if(y>74 && y<111){
+		if(x<24 && position<NAME_MAX){
+			name[position]='Q';
+			return ++position;
+		}else if(x<50 && position<NAME_MAX){
+			name[position]='W';
+			return ++position;
+		}else if(x<76 && position<NAME_MAX){
+			name[position]='E';
+			return ++position;
+		}else if(x<102 && position<NAME_MAX){
+			name[position]='R';
+			return ++position;
+		}else if(x<128 && position<NAME_MAX){
+			name[position]='T';
+			return ++position;
+		}else if(x<154 && position<NAME_MAX){
+			name[position]='Y';
+			return ++position;
+		}else if(x<180 && position<NAME_MAX){
+			name[position]='U';
+			return ++position;
+		}else if(x<209 && position<NAME_MAX){
+			name[position]='I';
+			return ++position;
+		}else if(x<237 && position<NAME_MAX){
+			name[position]='O';
+			return ++position;
+		}else if(x<256 && position<NAME_MAX){
+			name[position]='P';
+			return ++position;
+		}
+	}else if(y>115 && y<153){
+		if(x<30 && position<NAME_MAX){
+			name[position]='A';
+			return ++position;
+		}else if(x<58 && position<NAME_MAX){
+			name[position]='S';
+			return ++position;
+		}else if(x<86 && position<NAME_MAX){
+			name[position]='D';
+			return ++position;
+		}else if(x<114 && position<NAME_MAX){
+			name[position]='F';
+			return ++position;
+		}else if(x<142 && position<NAME_MAX){
+			name[position]='G';
+			return ++position;
+		}else if(x<170 && position<NAME_MAX){
+			name[position]='H';
+			return ++position;
+		}else if(x<223 && position<NAME_MAX){
+			name[position]='J';
+			return ++position;
+		}else if(x<234 && position<NAME_MAX){
+			name[position]='K';
+			return ++position;
+		}else if(x<256 && position<NAME_MAX){
+			name[position]='L';
+			return ++position;
+		}
+	}else if(y>158 && y<192){
+		if(x<33){
+			return position;
+		}else if(x<60 && position<NAME_MAX){
+			name[position]='Z';
+			return ++position;
+		}else if(x<87 && position<NAME_MAX){
+			name[position]='X';
+			return ++position;
+		}else if(x<114 && position<NAME_MAX){
+			name[position]='C';
+			return ++position;
+		}else if(x<144 && position<NAME_MAX){
+			name[position]='V';
+			return ++position;
+		}else if(x<171 && position<NAME_MAX){
+			name[position]='B';
+			return ++position;
+		}else if(x<200 && position<NAME_MAX){
+			name[position]='N';
+			return ++position;
+		}else if(x<230 && position<NAME_MAX){
+			name[position]='M';
+			return ++position;
+		}else if(x>229 && x<256 && position>0){
+			name[--position]=' ';
+			return position;
+		}
+	}
 
+	return position;
+}
+
+void game_nameAcquisition(char *name, int NAME_MAX){
+	//initializing keyboard and console
+	graphics_initKeyboard();
+	touchPosition pos;
+	int position=0;
+	while(1){
+		//displaying name
+		graphics_dispName(name,NAME_MAX);
+		//checking input
+		scanKeys();
+		if(keysDown()==KEY_START){
+			if(position==0){
+				name="NONAME";
+			}
+			return;
+		}else if(keysDown()==KEY_TOUCH){
+			touchRead(&pos);
+			position=game_updateName(name, pos, position, NAME_MAX);
+		}
+	}
 }

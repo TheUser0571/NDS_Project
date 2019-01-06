@@ -17,7 +17,7 @@ int main(void){
 	//welcome screen
 	game_welcomeScreen();
 	//name acquisition
-	char name[NAME_MAX];
+	char name[NAME_MAX]="          ";
 	game_nameAcquisition(name, NAME_MAX);
 	//Initializing rand seed with current time
 	srand(clock());

@@ -92,7 +92,7 @@ int Score_increase(int points) {
 		//position changing detector
 		if(scores[i]<score_cnt) {
 			position = i;
-			printf("position : %i\n", position+1);
+			//printf("position : %i\n", position+1);
 			break;
 		}
 	}
@@ -113,7 +113,7 @@ void Score_shifter(int i, int to_shift){
 void Score_reset(void){
 	int i;
 	if(scores[0] != 0){
-		printf("\n\tReset done");
+		printf("\x1b[30;1m\n\tReset done");
 		for(i = 0; i < NBSCORES; i++) {
 			scores[i] = 0;
 		}

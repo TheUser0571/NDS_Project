@@ -25,6 +25,7 @@
 #include "big_shield.h"
 #include "big_clock.h"
 #include "nums.h"
+#include "keyboard.h"
 
 
 #define SIMULATION
@@ -130,7 +131,7 @@ void graphics_init(void){
 	obst_cnt =1;
 	hide_count=0;
 	//Enable VRAM A for main screen
-	VRAM_A_CR = VRAM_ENABLE| VRAM_A_MAIN_BG;
+	VRAM_A_CR = VRAM_ENABLE|VRAM_A_MAIN_BG;
 	//Vram C for sub screen
 	VRAM_C_CR = VRAM_ENABLE|VRAM_C_SUB_BG;
 	//VRAM B for sprite
@@ -803,4 +804,59 @@ void graphics_setConsole(enum POWERUP_TYPE type){
 									 1); //height
 					break;
 	}
+}
+
+void graphics_initKeyboard(void){
+	//Enable VRAM A for main screen
+	VRAM_A_CR = VRAM_ENABLE|VRAM_A_MAIN_BG;
+	//Vram C for sub screen
+	VRAM_C_CR = VRAM_ENABLE|VRAM_C_SUB_BG;
+
+	//Set mode and background
+	REG_DISPCNT = MODE_3_2D|DISPLAY_BG0_ACTIVE;
+	REG_DISPCNT_SUB = MODE_3_2D|DISPLAY_BG0_ACTIVE;
+
+	//initializing BG_SUB control for keyboard display
+	BGCTRL_SUB[0] = BG_32x32|BG_COLOR_256|BG_MAP_BASE(0)|BG_TILE_BASE(1);
+
+	//initializing console (main) for name display
+	consoleClear();
+	consoleInit(&console, //console
+				0, //BG layer
+				BgType_Text4bpp, //BG type
+				BgSize_T_256x256, //BG size
+				0, //map base
+				1, //tile base
+				true, //main engine
+				true); //default font
+
+	//copying tiles, palette and map of keyboard
+	dmaCopy(keyboardTiles,BG_TILE_RAM_SUB(1),keyboardTilesLen);
+	dmaCopy(keyboardPal,BG_PALETTE_SUB,keyboardPalLen);
+	dmaCopy(keyboardMap,BG_MAP_RAM_SUB(0),keyboardMapLen);
+
+	//asking for name
+	consoleSetWindow(&console, //console
+					 8, //x
+					 5, //y
+					 16, //with
+					 1); //height
+	printf("\x1b[37;1mEnter your name:");
+
+	//starting instruction
+	consoleSetWindow(&console, //console
+					 6, //x
+					 22, //y
+					 20, //with
+					 1); //height
+	printf("\x1b[37;1mPress \x1b[31;1mstart\x1b[37;1m to begin");
+}
+
+void graphics_dispName(char *name,int NAME_MAX){
+	consoleSetWindow(&console, //console
+					 (32-NAME_MAX)/2, //x
+					 7, //y
+					 NAME_MAX, //with
+					 1); //height
+	printf("\x1b[32;1m%s",name);
 }

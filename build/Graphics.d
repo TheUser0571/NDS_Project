@@ -64,7 +64,8 @@ Graphics.o: /home/nds/files/workspace/NDS_Project/source/Graphics.c \
   /home/nds/files/workspace/NDS_Project/build/big_rainbow.h \
   /home/nds/files/workspace/NDS_Project/build/big_shield.h \
   /home/nds/files/workspace/NDS_Project/build/big_clock.h \
-  /home/nds/files/workspace/NDS_Project/build/nums.h
+  /home/nds/files/workspace/NDS_Project/build/nums.h \
+  /home/nds/files/workspace/NDS_Project/build/keyboard.h
 
 /opt/devkitPro/libnds/include/nds.h:
 
@@ -197,3 +198,5 @@ Graphics.o: /home/nds/files/workspace/NDS_Project/source/Graphics.c \
 /home/nds/files/workspace/NDS_Project/build/big_clock.h:
 
 /home/nds/files/workspace/NDS_Project/build/nums.h:
+
+/home/nds/files/workspace/NDS_Project/build/keyboard.h:
