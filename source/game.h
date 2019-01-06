@@ -16,4 +16,8 @@ void game_play(void);
 
 void game_loadScore(void);
 
+void game_welcomeScreen(void);
+
+void game_nameAcquisition(char *name, int NAME_MAX);
+
 #endif /* GAME_H_ */

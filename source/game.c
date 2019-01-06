@@ -287,3 +287,11 @@ void game_over(void){
 void game_loadScore(void){
 	Score_readFile();
 }
+
+void game_welcomeScreen(void){
+	//TODO
+}
+
+void game_nameAcquisition(char *name, int NAME_MAX){
+
+}

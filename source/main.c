@@ -11,10 +11,14 @@
 #include "game.h"
 #include "Audio.h"
 
+#define NAME_MAX 10
 
 int main(void){
-	//initializing console for debugging
-	//consoleDemoInit();
+	//welcome screen
+	game_welcomeScreen();
+	//name acquisition
+	char name[NAME_MAX];
+	game_nameAcquisition(name, NAME_MAX);
 	//Initializing rand seed with current time
 	srand(clock());
 	game_loadScore();
