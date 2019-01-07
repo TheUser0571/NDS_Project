@@ -17,7 +17,6 @@
 //powerup definitions
 int powerup_cnt=0;
 int slowmo_count=0, boost_count=0, shield_count=0, points_count=0;
-int points=0;
 int powerup_state=NONE_STATE;
 
 enum GameState{ACTIVE, GAMEOVER};
@@ -54,7 +53,6 @@ void game_init(void){
 	boost_count	=0;
 	shield_count=0;
 	points_count=0;
-	points=0;
 	//Initializing VRAM and BGCNT
 	graphics_init();
 	//setting up BG1
@@ -71,6 +69,8 @@ void game_init(void){
 	graphics_setupBG1_sub();
 	//setting up timers
 	timer_setup(&game_shift_main, &game_shift_back, &game_shift_sprite);
+	//reset score
+	Score_init();
 	//play music
 	Audio_Init();
 	Audio_PlayMusic();

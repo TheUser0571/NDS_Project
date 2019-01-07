@@ -26,12 +26,13 @@
 #include "big_clock.h"
 #include "nums.h"
 #include "keyboard.h"
+//#include "backimage.h"
 
 
 #define SIMULATION
 
 #define PROBABILITY 0.2 //initial probability
-#define POWERUP_PROB 0.1 //powerup probability (0.05)
+#define POWERUP_PROB 0.08 //powerup probability (0.05)
 #define TILE_OFFSET 16 //offset for tile memory
 #define WALL_PAL (0xa<<12) //palette for buildings
 #define OBST_PAL (0xe<<12) //palette for obstacles
@@ -208,6 +209,7 @@ void graphics_init_sprite(void){
 }
 //setting up background
 void graphics_setup_BG2(void){
+
 	//copying palette, tiles and map
 	dmaCopy(cloudsPal, BG_PALETTE, cloudsPalLen);
 	dmaCopy(cloudsMap,backMap,cloudsMapLen);
@@ -221,6 +223,12 @@ void graphics_setup_BG2(void){
 			backMap[32*32+row*32+col]=cloudsMap[row*32+31-col]|TILE_FLIP_H;
 		}
 	}
+
+	/*
+	dmaCopy(backimagePal, BG_PALETTE, backimagePalLen);
+	dmaCopy(backimageMap,backMap,backimageMapLen*3/2);
+	dmaCopy(backimageTiles, backTiles, backimageTilesLen);
+	*/
 }
 //setting up buildings
 void graphics_setup_BG1(void){
@@ -433,17 +441,21 @@ void graphics_update_map(int index){
 		}
 	}
 	double var;
+	bool check=true;
 	//designing new map
 	for(row=30;row>0;row-=4){
 		var = ((double)rand()/RAND_MAX);
-		if(var<POWERUP_PROB){
-			if(var<POWERUP_PROB/3){
+		if(var<POWERUP_PROB && check){
+			check=false;
+			if(var<POWERUP_PROB/4){
 				graphics_addPowerup(SLOWMO, row-2, index);
-			}else if(var>2*POWERUP_PROB/3){
+			}else if(var<5*POWERUP_PROB/8){
 				graphics_addPowerup(BOOST, row-2, index);
 			}else{
 				graphics_addPowerup(SHIELD, row-2, index);
 			}
+		}else{
+			check=true;
 		}
 		if(var<prob){
 			if(var<prob/2){

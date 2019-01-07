@@ -120,3 +120,7 @@ void Score_reset(void){
 		Score_writeFile();
 	}
 }
+
+void Score_init(void){
+	score_cnt=0;
+}
