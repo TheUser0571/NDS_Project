@@ -8,7 +8,9 @@
 #ifndef SCORE_H_
 #define SCORE_H_
 
-void Score_readFile(void);
+#define NAME_MAX 10
+
+void Score_readFile(char* gamer);
 void Score_insertResult(void);
 int  Score_increase(int points);
 void Score_reset(void);

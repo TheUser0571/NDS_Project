@@ -19,6 +19,9 @@ int powerup_cnt=0;
 int slowmo_count=0, boost_count=0, shield_count=0, points_count=0;
 int powerup_state=NONE_STATE;
 
+//name acquisition
+char name[NAME_MAX]="";
+
 enum GameState{ACTIVE, GAMEOVER};
 
 enum Points{PICKUP = 50, DISTANCE = 1};
@@ -270,132 +273,127 @@ void game_over(void){
 	game_state=GAMEOVER;
 }
 
-
-void game_loadScore(void){
-	Score_readFile();
-}
-
 void game_welcomeScreen(void){
 	//TODO
 }
 
-int game_updateName(char *name,touchPosition pos,int position,int NAME_MAX){
+int game_updateName(touchPosition pos,int position){
 	int x=pos.px, y=pos.py;
 	if(y>37 && y<69){
-		if(x<24 && position<NAME_MAX){
+		if(x<24 && position<NAME_MAX-1){
 			name[position]='1';
 			return ++position;
-		}else if(x<50 && position<NAME_MAX){
+		}else if(x< 50 && position<NAME_MAX-1){
 			name[position]='2';
 			return ++position;
-		}else if(x<76 && position<NAME_MAX){
+		}else if(x< 76 && position<NAME_MAX-1){
 			name[position]='3';
 			return ++position;
-		}else if(x<102 && position<NAME_MAX){
+		}else if(x<102 && position<NAME_MAX-1){
 			name[position]='4';
 			return ++position;
-		}else if(x<128 && position<NAME_MAX){
+		}else if(x<128 && position<NAME_MAX-1){
 			name[position]='5';
 			return ++position;
-		}else if(x<154 && position<NAME_MAX){
+		}else if(x<154 && position<NAME_MAX-1){
 			name[position]='6';
 			return ++position;
-		}else if(x<180 && position<NAME_MAX){
+		}else if(x<180 && position<NAME_MAX-1){
 			name[position]='7';
 			return ++position;
-		}else if(x<209 && position<NAME_MAX){
+		}else if(x<209 && position<NAME_MAX-1){
 			name[position]='8';
 			return ++position;
-		}else if(x<237 && position<NAME_MAX){
+		}else if(x<237 && position<NAME_MAX-1){
 			name[position]='9';
 			return ++position;
-		}else if(x<256 && position<NAME_MAX){
+		}else if(x<256 && position<NAME_MAX-1){
 			name[position]='0';
 			return ++position;
 		}
 	}else if(y>74 && y<111){
-		if(x<24 && position<NAME_MAX){
+		if(x<24 && position<NAME_MAX-1){
 			name[position]='Q';
 			return ++position;
-		}else if(x<50 && position<NAME_MAX){
+		}else if(x<50 && position<NAME_MAX-1){
 			name[position]='W';
 			return ++position;
-		}else if(x<76 && position<NAME_MAX){
+		}else if(x<76 && position<NAME_MAX-1){
 			name[position]='E';
 			return ++position;
-		}else if(x<102 && position<NAME_MAX){
+		}else if(x<102 && position<NAME_MAX-1){
 			name[position]='R';
 			return ++position;
-		}else if(x<128 && position<NAME_MAX){
+		}else if(x<128 && position<NAME_MAX-1){
 			name[position]='T';
 			return ++position;
-		}else if(x<154 && position<NAME_MAX){
+		}else if(x<154 && position<NAME_MAX-1){
 			name[position]='Y';
 			return ++position;
-		}else if(x<180 && position<NAME_MAX){
+		}else if(x<180 && position<NAME_MAX-1){
 			name[position]='U';
 			return ++position;
-		}else if(x<209 && position<NAME_MAX){
+		}else if(x<209 && position<NAME_MAX-1){
 			name[position]='I';
 			return ++position;
-		}else if(x<237 && position<NAME_MAX){
+		}else if(x<237 && position<NAME_MAX-1){
 			name[position]='O';
 			return ++position;
-		}else if(x<256 && position<NAME_MAX){
+		}else if(x<256 && position<NAME_MAX-1){
 			name[position]='P';
 			return ++position;
 		}
 	}else if(y>115 && y<153){
-		if(x<30 && position<NAME_MAX){
+		if(x<30 && position<NAME_MAX-1){
 			name[position]='A';
 			return ++position;
-		}else if(x<58 && position<NAME_MAX){
+		}else if(x< 58 && position<NAME_MAX-1){
 			name[position]='S';
 			return ++position;
-		}else if(x<86 && position<NAME_MAX){
+		}else if(x< 86 && position<NAME_MAX-1){
 			name[position]='D';
 			return ++position;
-		}else if(x<114 && position<NAME_MAX){
+		}else if(x<114 && position<NAME_MAX-1){
 			name[position]='F';
 			return ++position;
-		}else if(x<142 && position<NAME_MAX){
+		}else if(x<142 && position<NAME_MAX-1){
 			name[position]='G';
 			return ++position;
-		}else if(x<170 && position<NAME_MAX){
+		}else if(x<170 && position<NAME_MAX-1){
 			name[position]='H';
 			return ++position;
-		}else if(x<223 && position<NAME_MAX){
+		}else if(x<223 && position<NAME_MAX-1){
 			name[position]='J';
 			return ++position;
-		}else if(x<234 && position<NAME_MAX){
+		}else if(x<234 && position<NAME_MAX-1){
 			name[position]='K';
 			return ++position;
-		}else if(x<256 && position<NAME_MAX){
+		}else if(x<256 && position<NAME_MAX-1){
 			name[position]='L';
 			return ++position;
 		}
 	}else if(y>158 && y<192){
 		if(x<33){
 			return position;
-		}else if(x<60 && position<NAME_MAX){
+		}else if(x< 60 && position<NAME_MAX-1){
 			name[position]='Z';
 			return ++position;
-		}else if(x<87 && position<NAME_MAX){
+		}else if(x< 87 && position<NAME_MAX-1){
 			name[position]='X';
 			return ++position;
-		}else if(x<114 && position<NAME_MAX){
+		}else if(x<114 && position<NAME_MAX-1){
 			name[position]='C';
 			return ++position;
-		}else if(x<144 && position<NAME_MAX){
+		}else if(x<144 && position<NAME_MAX-1){
 			name[position]='V';
 			return ++position;
-		}else if(x<171 && position<NAME_MAX){
+		}else if(x<171 && position<NAME_MAX-1){
 			name[position]='B';
 			return ++position;
-		}else if(x<200 && position<NAME_MAX){
+		}else if(x<200 && position<NAME_MAX-1){
 			name[position]='N';
 			return ++position;
-		}else if(x<230 && position<NAME_MAX){
+		}else if(x<230 && position<NAME_MAX-1){
 			name[position]='M';
 			return ++position;
 		}else if(x>229 && x<256 && position>0){
@@ -407,7 +405,7 @@ int game_updateName(char *name,touchPosition pos,int position,int NAME_MAX){
 	return position;
 }
 
-void game_nameAcquisition(char *name, int NAME_MAX){
+void game_nameAcquisition(){
 	//initializing keyboard and console
 	graphics_initKeyboard();
 	touchPosition pos;
@@ -419,12 +417,15 @@ void game_nameAcquisition(char *name, int NAME_MAX){
 		scanKeys();
 		if(keysDown()==KEY_START){
 			if(position==0){
-				name="NONAME";
+				//name="NONAME";
+				sprintf(name,"%s","NONAME ");
 			}
+			name[position] = '\0';
+			Score_readFile(name);
 			return;
 		}else if(keysDown()==KEY_TOUCH){
 			touchRead(&pos);
-			position=game_updateName(name, pos, position, NAME_MAX);
+			position=game_updateName(pos, position);
 		}
 	}
 }
