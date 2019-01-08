@@ -53,7 +53,7 @@ void Score_readFile(char* gamer) {
 		int i = 0;
 		for(i = 0; i < NBSCORES; i++) {
 			scores[i] = 0;
-			sprintf(&names[i*NBSCORES],"NONAME");
+			sprintf(&names[i*NBSCORES],"NONAME   ");
 		}
 	}
 	position = NBSCORES;
@@ -106,7 +106,6 @@ int Score_increase(int points) {
 		//position changing detector
 		if(scores[i]<score_cnt) {
 			position = i;
-			printf("position : %i\n", position+1);
 			break;
 		}
 	}
@@ -136,7 +135,7 @@ void Score_reset(void){
 		printf("\x1b[30;1m\n\tReset done");
 		for(i = 0; i < NBSCORES; i++) {
 			scores[i] = 0;
-			sprintf(&names[i*NBSCORES],"NONAME");
+			sprintf(&names[i*NBSCORES],"NONAME   ");
 		}
 		Score_writeFile();
 	}

@@ -67,4 +67,12 @@ void graphics_initKeyboard(void);
 
 void graphics_dispName(char *name,int NAME_MAX);
 
+void graphics_initWelcome(void);
+
+void graphics_init_spriteWelcome(void);
+
+void graphics_animeWelcomeCat(void);
+
+void graphics_WelcomeFree(void);
+
 #endif /* GRAPHICS_H_ */

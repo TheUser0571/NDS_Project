@@ -15,6 +15,9 @@
 #include "NyanCat1.h"
 #include "NyanCat2.h"
 #include "NyanCat3.h"
+#include "NyanCat4.h"
+#include "NyanCat5.h"
+#include "NyanCat6.h"
 #include "game_over.h"
 #include "clock.h"
 #include "rainbow.h"
@@ -26,6 +29,7 @@
 #include "big_clock.h"
 #include "nums.h"
 #include "keyboard.h"
+#include "start.h"
 
 
 #define SIMULATION
@@ -90,7 +94,7 @@ int gfx_cnt=0;
 int obst_cnt=1;
 //powerup definitions
 int hide_count=0;
-//cosole for timer display
+//console for timer display
 PrintConsole console;
 //cutom tiles
 u8 FullTileTransp[32]={0,0,0,0,
@@ -210,8 +214,9 @@ void graphics_init_sprite(void){
 void graphics_setup_BG2(void){
 	//copying palette, tiles and map
 	dmaCopy(cloudsPal, BG_PALETTE, cloudsPalLen);
-	dmaCopy(cloudsMap,backMap,cloudsMapLen);
+	dmaCopy(cloudsMap, backMap, cloudsMapLen);
 	dmaCopy(cloudsTiles, backTiles, cloudsTilesLen);
+
 	//dmaCopy(cloudsMap,&backMap[32*32],cloudsMapLen);
 
 	//bottom half of BG is the switched image of top half
@@ -859,4 +864,132 @@ void graphics_dispName(char *name,int NAME_MAX){
 					 NAME_MAX, //with
 					 1); //height
 	printf("\x1b[32;1m%s",name);
+}
+
+void graphics_initWelcome(void){
+	//Enable VRAM A for main screen
+	VRAM_A_CR = VRAM_ENABLE|VRAM_A_MAIN_BG;
+	//Vram C for sub screen
+	VRAM_C_CR = VRAM_ENABLE|VRAM_C_SUB_BG;
+
+	//Set mode and background
+	REG_DISPCNT = MODE_3_2D|DISPLAY_BG0_ACTIVE;
+	REG_DISPCNT_SUB = MODE_3_2D|DISPLAY_BG0_ACTIVE;
+
+	//initializing BG_SUB control for keyboard display
+	BGCTRL[0] = BG_32x32|BG_COLOR_256|BG_MAP_BASE(0)|BG_TILE_BASE(1);
+
+	//initializing console (main) for name display
+	consoleClear();
+	consoleInit(&console, //console
+				0, //BG layer
+				BgType_Text4bpp, //BG type
+				BgSize_T_256x256, //BG size
+				0, //map base
+				1, //tile base
+				false, //main engine
+				true); //default font
+
+	//copying tiles, palette and map of keyboard
+	dmaCopy(startTiles,BG_TILE_RAM(1),startTilesLen);
+	dmaCopy(startPal,BG_PALETTE,startPalLen);
+	dmaCopy(startMap,BG_MAP_RAM(0),startMapLen);
+
+
+	//asking for name
+	consoleSetWindow(&console, //console
+					 1, //x
+					 1, //y
+					 31, //with
+					 31); //height
+	printf("\x1b[37;1m");
+	printf("Hi! I'm NyanNyanCat.\nNice to meet you :-)\n");
+	printf("I climp buildings and jump\naround (press A).\n\n");
+	printf("My superpowers are the boost\n(press X),");
+	printf("slowmotion (press B) and shield (press Y)");
+
+	//VRAM B for sprite
+	VRAM_B_CR = VRAM_ENABLE|VRAM_B_MAIN_SPRITE_0x06400000;
+}
+
+void graphics_init_spriteWelcome(void){
+	//animation variable
+	cat_state=1;
+	gfx_cnt=0;
+	x_pos_sprite = 105;
+	y_pos_sprite = 130;
+	cat_state=1;
+	cat_rot = 1;
+
+	oamInit(&oamMain, SpriteMapping_1D_32, false);
+
+	//allocating memory for sprite graphics
+	gfx1 = oamAllocateGfx(&oamMain, SpriteSize_32x32, SpriteColorFormat_256Color);
+	gfx2 = oamAllocateGfx(&oamMain, SpriteSize_32x32, SpriteColorFormat_256Color);
+	gfx3 = oamAllocateGfx(&oamMain, SpriteSize_32x32, SpriteColorFormat_256Color);
+
+	//copying palette and tiles
+	dmaCopy(NyanCat1Pal,SPRITE_PALETTE,NyanCat1PalLen);
+	dmaCopy(NyanCat4Tiles,gfx1,NyanCat4TilesLen);
+	dmaCopy(NyanCat5Tiles,gfx2,NyanCat5TilesLen);
+	dmaCopy(NyanCat6Tiles,gfx3,NyanCat6TilesLen);
+
+	//initializing sprite
+	oamSet(	&oamMain,//oam handler
+			0,//Number of sprite
+			x_pos_sprite, y_pos_sprite,//Coordinates
+			0,//Priority
+			0,//Palette to use
+			SpriteSize_32x32,//Prite size
+			SpriteColorFormat_256Color,//Color format
+			gfx1,//Loaded graphic to display
+			-1,//Affine rotation to use (-1 none)
+			false,//Double size if rotating
+			false,//Hide this sprite
+			cat_rot, false,//Horizontal or vertical flip
+			false);//Mosaic
+	oamUpdate(&oamMain);
+}
+
+void graphics_animeWelcomeCat(void){
+	if(++gfx_cnt>=25){
+		gfx_cnt=0;
+		switch(cat_state){
+			case 1:	cat_state=2;
+					gfx_active=gfx1;
+					break;
+			case 2:	cat_state=3;
+					gfx_active=gfx2;
+					break;
+			case 3: cat_state=4;
+					gfx_active=gfx3;
+					break;
+			case 4:	cat_state=1;
+					gfx_active=gfx1;
+					break;
+			default: break;
+			}
+		//updating sprite
+		oamSet(	&oamMain,//oam handler
+				0,//Number of sprite
+				x_pos_sprite, y_pos_sprite,//Coordinates
+				0,//Priority
+				0,//Palette to use
+				SpriteSize_32x32,//sprite size
+				SpriteColorFormat_256Color,//Color format
+				gfx_active,//Loaded graphic to display
+				-1,//Affine rotation to use (-1 none)
+				false,//Double size if rotating
+				hide_sprite,//Hide this sprite
+				cat_rot, false,//Horizontal or vertical flip
+				false);//Mosaic
+		oamUpdate(&oamMain);
+	}
+}
+
+void graphics_WelcomeFree(void){
+	oamClear(&oamMain,0,1);
+	oamFreeGfx(&oamMain, gfx1);
+	oamFreeGfx(&oamMain, gfx2);
+	oamFreeGfx(&oamMain, gfx3);
 }

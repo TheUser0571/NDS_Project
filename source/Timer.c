@@ -61,3 +61,16 @@ void timer_endBoost(void){
 	TIMER_DATA(1)=TIMER_FREQ_64(speed/5);
 	TIMER_DATA(2)=TIMER_FREQ_64(speed+100);
 }
+
+void timer_welcomeAnimation(void* animationHandler){
+	speed=100;
+	//initializing timer 2 (sprite)
+	irqSet(IRQ_TIMER2, animationHandler);
+	TIMER_CR(2)=TIMER_ENABLE|TIMER_DIV_64|TIMER_IRQ_REQ;
+	TIMER_DATA(2)=TIMER_FREQ_64(speed+100);
+	irqEnable(IRQ_TIMER2);
+}
+
+void timer_welcomeEnd(void){
+	irqDisable(IRQ_TIMER2);
+}
