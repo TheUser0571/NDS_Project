@@ -55,6 +55,9 @@ Graphics.o: /home/nds/files/workspace/NDS_Project/source/Graphics.c \
   /home/nds/files/workspace/NDS_Project/build/NyanCat1.h \
   /home/nds/files/workspace/NDS_Project/build/NyanCat2.h \
   /home/nds/files/workspace/NDS_Project/build/NyanCat3.h \
+  /home/nds/files/workspace/NDS_Project/build/NyanCat4.h \
+  /home/nds/files/workspace/NDS_Project/build/NyanCat5.h \
+  /home/nds/files/workspace/NDS_Project/build/NyanCat6.h \
   /home/nds/files/workspace/NDS_Project/build/game_over.h \
   /home/nds/files/workspace/NDS_Project/build/clock.h \
   /home/nds/files/workspace/NDS_Project/build/rainbow.h \
@@ -65,7 +68,8 @@ Graphics.o: /home/nds/files/workspace/NDS_Project/source/Graphics.c \
   /home/nds/files/workspace/NDS_Project/build/big_shield.h \
   /home/nds/files/workspace/NDS_Project/build/big_clock.h \
   /home/nds/files/workspace/NDS_Project/build/nums.h \
-  /home/nds/files/workspace/NDS_Project/build/keyboard.h
+  /home/nds/files/workspace/NDS_Project/build/keyboard.h \
+  /home/nds/files/workspace/NDS_Project/build/start.h
 
 /opt/devkitPro/libnds/include/nds.h:
 
@@ -179,6 +183,12 @@ Graphics.o: /home/nds/files/workspace/NDS_Project/source/Graphics.c \
 
 /home/nds/files/workspace/NDS_Project/build/NyanCat3.h:
 
+/home/nds/files/workspace/NDS_Project/build/NyanCat4.h:
+
+/home/nds/files/workspace/NDS_Project/build/NyanCat5.h:
+
+/home/nds/files/workspace/NDS_Project/build/NyanCat6.h:
+
 /home/nds/files/workspace/NDS_Project/build/game_over.h:
 
 /home/nds/files/workspace/NDS_Project/build/clock.h:
@@ -200,3 +210,5 @@ Graphics.o: /home/nds/files/workspace/NDS_Project/source/Graphics.c \
 /home/nds/files/workspace/NDS_Project/build/nums.h:
 
 /home/nds/files/workspace/NDS_Project/build/keyboard.h:
+
+/home/nds/files/workspace/NDS_Project/build/start.h:

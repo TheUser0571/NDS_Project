@@ -22,4 +22,8 @@ void timer_startBoost(void);
 
 void timer_endBoost(void);
 
+void timer_welcomeAnimation(void* animationHandler);
+
+void timer_welcomeEnd(void);
+
 #endif /* TIMER_H_ */

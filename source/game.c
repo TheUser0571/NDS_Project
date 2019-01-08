@@ -20,7 +20,7 @@ int slowmo_count=0, boost_count=0, shield_count=0, points_count=0;
 int powerup_state=NONE_STATE;
 
 //name acquisition
-char name[NAME_MAX]="";
+char name[NAME_MAX]="         ";
 
 enum GameState{ACTIVE, GAMEOVER};
 
@@ -273,10 +273,6 @@ void game_over(void){
 	game_state=GAMEOVER;
 }
 
-void game_welcomeScreen(void){
-	//TODO
-}
-
 int game_updateName(touchPosition pos,int position){
 	int x=pos.px, y=pos.py;
 	if(y>37 && y<69){
@@ -418,14 +414,33 @@ void game_nameAcquisition(){
 		if(keysDown()==KEY_START){
 			if(position==0){
 				//name="NONAME";
-				sprintf(name,"%s","NONAME ");
+				sprintf(name,"%s","NONAME   ");
 			}
-			name[position] = '\0';
+			name[NAME_MAX-1] = '\0';
 			Score_readFile(name);
 			return;
-		}else if(keysDown()==KEY_TOUCH){
+		} else if(keysDown()==KEY_TOUCH){
 			touchRead(&pos);
 			position=game_updateName(pos, position);
 		}
 	}
 }
+
+void game_welcomeScreen(void){
+	//initializing keyboard and console
+	graphics_initWelcome();
+	graphics_init_spriteWelcome();
+	timer_welcomeAnimation(&graphics_animeWelcomeCat);
+	while(1){
+		//checking input
+		scanKeys();
+		//checking input
+		if(keysDown()==KEY_START){
+			timer_welcomeEnd();
+			graphics_WelcomeFree();
+			return;
+		}
+		swiWaitForVBlank();
+	}
+}
+
