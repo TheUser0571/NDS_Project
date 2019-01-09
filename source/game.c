@@ -297,10 +297,10 @@ int game_updateName(touchPosition pos,int position){
 		}else if(x<180 && position<NAME_MAX-1){
 			name[position]='7';
 			return ++position;
-		}else if(x<209 && position<NAME_MAX-1){
+		}else if(x<206 && position<NAME_MAX-1){
 			name[position]='8';
 			return ++position;
-		}else if(x<237 && position<NAME_MAX-1){
+		}else if(x<232 && position<NAME_MAX-1){
 			name[position]='9';
 			return ++position;
 		}else if(x<256 && position<NAME_MAX-1){
@@ -329,10 +329,10 @@ int game_updateName(touchPosition pos,int position){
 		}else if(x<180 && position<NAME_MAX-1){
 			name[position]='U';
 			return ++position;
-		}else if(x<209 && position<NAME_MAX-1){
+		}else if(x<206 && position<NAME_MAX-1){
 			name[position]='I';
 			return ++position;
-		}else if(x<237 && position<NAME_MAX-1){
+		}else if(x<232 && position<NAME_MAX-1){
 			name[position]='O';
 			return ++position;
 		}else if(x<256 && position<NAME_MAX-1){
@@ -358,10 +358,10 @@ int game_updateName(touchPosition pos,int position){
 		}else if(x<170 && position<NAME_MAX-1){
 			name[position]='H';
 			return ++position;
-		}else if(x<223 && position<NAME_MAX-1){
+		}else if(x<198 && position<NAME_MAX-1){
 			name[position]='J';
 			return ++position;
-		}else if(x<234 && position<NAME_MAX-1){
+		}else if(x<226 && position<NAME_MAX-1){
 			name[position]='K';
 			return ++position;
 		}else if(x<256 && position<NAME_MAX-1){

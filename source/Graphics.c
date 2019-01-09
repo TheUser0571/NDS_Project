@@ -539,7 +539,7 @@ void graphics_shift_sprite(int powerup_state){
 		}
 	}
 	//cycling through sprite graphics to make it move
-	if(++gfx_cnt==25){
+	if(++gfx_cnt==35){
 		gfx_cnt=0;
 		switch(cat_state){
 			case 1:	cat_state=2;
@@ -915,9 +915,11 @@ void graphics_initWelcome(void){
 					 31); //height
 	printf("\x1b[37;1m");
 	printf("Hi! I'm NyanNyanCat.\nNice to meet you :-)\n");
-	printf("I climp buildings and jump\naround (press A).\n\n");
-	printf("My superpowers are the boost\n(press X),");
+	printf("\nI climb buildings and jump\naround (press A).\n\n");
+	printf("\nMy superpowers are the boost\n(press X),");
 	printf("slowmotion (press B) and shield (press Y)");
+	printf("\n\nYou can charge my abilities\nby catching the powerups!");
+	printf("\n\nHave fun!");
 
 	//VRAM B for sprite
 	VRAM_B_CR = VRAM_ENABLE|VRAM_B_MAIN_SPRITE_0x06400000;
@@ -963,7 +965,7 @@ void graphics_init_spriteWelcome(void){
 }
 
 void graphics_animeWelcomeCat(void){
-	if(++gfx_cnt>=25){
+	if(++gfx_cnt>=35){
 		gfx_cnt=0;
 		switch(cat_state){
 			case 1:	cat_state=2;
@@ -976,7 +978,7 @@ void graphics_animeWelcomeCat(void){
 					gfx_active=gfx3;
 					break;
 			case 4:	cat_state=1;
-					gfx_active=gfx1;
+					gfx_active=gfx2;
 					break;
 			default: break;
 			}
