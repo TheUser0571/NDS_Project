@@ -414,9 +414,9 @@ void game_nameAcquisition(){
 		if(keysDown()==KEY_START){
 			if(position==0){
 				//name="NONAME";
-				sprintf(name,"%s","NONAME   ");
+				sprintf(name,"%s","NONAME");
 			}
-			name[NAME_MAX-1] = '\0';
+			name[position] = '\0';
 			Score_readFile(name);
 			return;
 		} else if(keysDown()==KEY_TOUCH){

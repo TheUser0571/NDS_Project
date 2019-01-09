@@ -31,7 +31,8 @@ void Score_writeFile(void) {
 	if(file!=NULL) {
 		int i = 0;
 		for(i = 0; i < NBSCORES; i++) {
-			fprintf(file, "%i %s\n", scores[i],  &names[i*NBSCORES]);
+			fprintf(file, "%i %s\n", scores[i],  &names[i*NAME_MAX]);
+
 		}
 		fclose(file);
 	}
@@ -45,7 +46,7 @@ void Score_readFile(char* gamer) {
 	if(file!=NULL) {
 		int i = 0;
 		for(i = 0; i < NBSCORES; i++) {
-			fscanf(file, "%i %s\n", &scores[i], &names[i*NBSCORES]);
+			fscanf(file, "%i %s\n", &scores[i], &names[i*NAME_MAX]);
 		}
 		fclose(file);
 	}
@@ -53,7 +54,7 @@ void Score_readFile(char* gamer) {
 		int i = 0;
 		for(i = 0; i < NBSCORES; i++) {
 			scores[i] = 0;
-			sprintf(&names[i*NBSCORES],"NONAME   ");
+			sprintf(&names[i*NAME_MAX],"NONAME");
 		}
 	}
 	position = NBSCORES;
@@ -62,19 +63,27 @@ void Score_readFile(char* gamer) {
 
 void Score_printscoreboard(void) {
 	int i = 0;
+	bool match = true;
 	for(i = 0; i < NBSCORES; i++) {
-		if		(scores[i] == score_cnt && i <  9)
-			printf("\x1b[31;1m\t\t%i %s: %i\n", i+1,
-				&names[i*NBSCORES], scores[i]);
-		else if (scores[i] != score_cnt && i <  9)
-			printf("\x1b[30;1m\t\t%i %s: %i\n", i+1,
-				&names[i*NBSCORES], scores[i]);
-		else if (scores[i] == score_cnt && i >= 9)
-			printf("\x1b[31;1m\t\t%i %s: %i\n", i+1,
-				&names[i*NBSCORES], scores[i]);
+		if		(scores[i] == score_cnt && match
+					&& i <  9 && strcmp(&names[i*NAME_MAX],gamerName) == 0){
+			printf("\x1b[31;1m\t\t%i %10s: %i\n", i+1,
+				&names[i*NAME_MAX], scores[i]);
+			match = false;
+		}
+		else if (i < 9)
+			printf("\x1b[30;1m\t\t%i %10s: %i\n", i+1,
+				&names[i*NAME_MAX], scores[i])/*
+			printf("\x1b[30;1m%i %i %i %i\n", match,scores[i] == score_cnt, i < 9,strncmp(&names[i],gamerName,9))*/;
+		else if (scores[i] == score_cnt && true
+					&& i >= 9 && strcmp(&names[i*NAME_MAX],gamerName) == 0){
+			printf("\x1b[31;1m\t\t%i %10s: %i\n", i+1,
+				&names[i*NAME_MAX], scores[i]);
+			match = false;
+		}
 		else
-			printf("\x1b[30;1m\t\t%i%s: %i\n", i+1,
-				&names[i*NBSCORES], scores[i]);
+			printf("\x1b[30;1m\t\t%i%10s: %i\n", i+1,
+				&names[i*NAME_MAX], scores[i]);
 	}
 	printf("\x1b[30;1m\n Press Start for restarting\n the game\n\n");
 	printf("\x1b[30;1m Press X for resetting the\n scores\n\n");
@@ -86,9 +95,9 @@ void Score_insertResult(void) {
 	for(i = 0; i < NBSCORES; i++) {
 		if(scores[i]<score_cnt) {
 			to_shift 	 = scores[i];
-			sprintf(to_shiftName, "%s", &names[i*NBSCORES]);
+			sprintf(to_shiftName, "%s", &names[i*NAME_MAX]);
 			scores[i]	 = score_cnt;
-			sprintf(&names[i*NBSCORES], "%s", gamerName);
+			sprintf(&names[i*NAME_MAX], "%s", gamerName);
 			break;
 		}
 	}
@@ -118,10 +127,10 @@ void Score_shifter(int i, int to_shift, char* to_shiftName){
 	char* nextName;
 	for(j = i+1; j < NBSCORES; j++) {
 		next 	  = scores[j];
-		sprintf(nextName, "%s", &names[j*NBSCORES]);
+		sprintf(nextName, "%s", &names[j*NAME_MAX]);
 
 		scores[j] = to_shift;
-		sprintf(&names[j*NBSCORES], "%s", to_shiftName);
+		sprintf(&names[j*NAME_MAX], "%s", to_shiftName);
 
 		to_shift  = next;
 		sprintf(to_shiftName, "%s", nextName);
@@ -135,7 +144,7 @@ void Score_reset(void){
 		printf("\x1b[30;1m\n\tReset done");
 		for(i = 0; i < NBSCORES; i++) {
 			scores[i] = 0;
-			sprintf(&names[i*NBSCORES],"NONAME   ");
+			sprintf(&names[i*NAME_MAX],"NONAME");
 		}
 		Score_writeFile();
 	}
