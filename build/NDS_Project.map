@@ -420,7 +420,7 @@ Linker script and memory map
                 0x02000438                Audio_endBoost
                 0x020003b0                Audio_Init
                 0x020003f4                Audio_startBoost
- .text          0x020004c0      0xc50 game.o
+ .text          0x020004c0      0xc58 game.o
                 0x0200104c                game_nameAcquisition
                 0x02000704                game_activateSlowmo
                 0x020004d8                game_shift_sprite
@@ -435,278 +435,278 @@ Linker script and memory map
                 0x0200077c                game_activateBoost
                 0x020004c0                game_shift_back
                 0x020010d8                game_welcomeScreen
- .text          0x02001110     0x23d8 Graphics.o
-                0x02001ff0                graphics_update_map
-                0x020030d0                graphics_dispName
-                0x020021d4                graphics_shift_sprite
-                0x020019a4                graphics_setupBG2_sub
-                0x02003494                graphics_WelcomeFree
-                0x02002b34                graphics_setSpriteVisibility
-                0x0200311c                graphics_initWelcome
-                0x020029e0                graphics_drawRainbow
-                0x020012cc                graphics_init_sprite
-                0x02002ce8                graphics_drawNum
-                0x02001cb4                graphics_build
-                0x02003240                graphics_init_spriteWelcome
-                0x020025f0                graphics_game_over
-                0x02002ae8                graphics_clearRainbow
-                0x02001be4                graphics_setupBG1_sub
-                0x02002f78                graphics_setConsole
-                0x020017d0                graphics_setup_BG0
-                0x02001110                graphics_init
-                0x02002194                graphics_shift_main
-                0x0200243c                graphics_jump
-                0x02002fe0                graphics_initKeyboard
-                0x02002988                graphics_clearPowerup
-                0x02001420                graphics_setup_BG2
-                0x02002c20                graphics_updatePoints
-                0x02002b4c                graphics_toggleRainbow
-                0x020027cc                graphics_addPowerup
-                0x02002418                graphics_shift_back
-                0x02003388                graphics_animeWelcomeCat
-                0x020014c4                graphics_setup_BG1
-                0x02002b84                graphics_drawNumber
-                0x02002484                graphics_checkCollision
-                0x02002780                graphics_updateScreen
- .text          0x020034e8       0x28 main.o
-                0x020034e8                main
- .text          0x02003510      0x550 Score.o
-                0x0200395c                Score_shifter
-                0x02003688                Score_printscoreboard
-                0x020039ec                Score_reset
-                0x0200358c                Score_readFile
-                0x0200383c                Score_insertResult
-                0x02003900                Score_increase
-                0x02003510                Score_writeFile
-                0x02003a54                Score_init
- .text          0x02003a60      0x310 Timer.o
-                0x02003a60                timer_setup
-                0x02003ca4                timer_endBoost
-                0x02003d60                timer_welcomeEnd
-                0x02003bc8                timer_endSlowmo
-                0x02003b24                timer_disable
-                0x02003c34                timer_startBoost
-                0x02003d10                timer_welcomeAnimation
-                0x02003b40                timer_startSlowmo
- .text          0x02003d70      0x204 /opt/devkitPro/libnds/lib/libfat.a(libfat.o)
-                0x02003da8                fatMount
-                0x02003d70                fatUnmount
-                0x02003f64                fatMountSimple
-                0x02003f54                fatInitDefault
-                0x02003e0c                fatInit
- *fill*         0x02003f74        0x4 ff
- .text          0x02003f78      0x340 /opt/devkitPro/libnds/lib/libfat.a(partition.o)
-                0x02003f78                _FAT_partition_getPartitionFromPath
-                0x02003f8c                _FAT_partition_destructor
-                0x02003fb4                _FAT_partition_constructor
- .text          0x020042b8      0x38c /opt/devkitPro/libnds/lib/libfat.a(cache.o)
-                0x0200438c                _FAT_cache_flush
-                0x020044b8                _FAT_cache_writeLittleEndianValue
-                0x0200446c                _FAT_cache_writePartialSector
-                0x020043e4                _FAT_cache_invalidate
-                0x020045b0                _FAT_cache_destructor
-                0x02004558                _FAT_cache_readLittleEndianValue
-                0x020045cc                _FAT_cache_constructor
-                0x02004520                _FAT_cache_readPartialSector
-                0x02004408                _FAT_cache_eraseWritePartialSector
- .text          0x02004644        0x0 /opt/devkitPro/libnds/lib/libfat.a(disc.o)
- .text          0x02004644      0x784 /opt/devkitPro/libnds/lib/libfat.a(fatdir.o)
-                0x020046f8                _FAT_stat_r
-                0x02004660                _FAT_dirnext_r
-                0x02004c6c                _FAT_unlink_r
-                0x02004a90                _FAT_rename_r
-                0x02004644                _FAT_link_r
-                0x02004650                _FAT_dirclose_r
-                0x02004c10                _FAT_chdir_r
-                0x020046c4                _FAT_dirreset_r
-                0x02004778                _FAT_diropen_r
-                0x02004828                _FAT_statvfs_r
-                0x02004880                _FAT_mkdir_r
- .text          0x02004dc8     0x10b8 /opt/devkitPro/libnds/lib/libfat.a(fatfile.o)
-                0x02004fbc                _FAT_ftruncate_r
-                0x020052cc                _FAT_write_r
-                0x02005108                _FAT_seek_r
-                0x02005724                _FAT_read_r
-                0x02005a20                _FAT_syncToDisc
-                0x02005b88                _FAT_open_r
-                0x02005b00                _FAT_fsync_r
-                0x02005b28                _FAT_close_r
-                0x02005254                _FAT_fstat_r
- .text          0x02005e80      0x458 /opt/devkitPro/libnds/lib/libfat.a(file_allocation_table.o)
-                0x02005f70                _FAT_fat_freeClusterCount
-                0x020060f8                _FAT_fat_clearLinks
-                0x02005e80                _FAT_fat_nextCluster
-                0x0200626c                _FAT_fat_linkFreeClusterCleared
-                0x02006154                _FAT_fat_trimChain
-                0x020061dc                _FAT_fat_linkFreeCluster
-                0x02005f9c                _FAT_fat_lastCluster
- .text          0x020062d8       0xc8 /opt/devkitPro/libnds/lib/libfat.a(filetime.o)
-                0x02006310                _FAT_filetime_getDateFromRTC
-                0x020062d8                _FAT_filetime_to_time_t
-                0x02006358                _FAT_filetime_getTimeFromRTC
- .text          0x020063a0     0x12dc /opt/devkitPro/libnds/lib/libfat.a(directory.o)
-                0x02007640                _FAT_directory_chdir
-                0x02006440                _FAT_directory_entryStat
-                0x0200667c                _FAT_directory_removeEntry
-                0x02006500                _FAT_directory_getRootEntry
-                0x0200680c                _FAT_directory_entryFromPosition
-                0x0200694c                _FAT_directory_getNextEntry
-                0x02006b70                _FAT_directory_getFirstEntry
-                0x02006414                _FAT_directory_entryGetCluster
-                0x02006c3c                _FAT_directory_addEntry
-                0x02007464                _FAT_directory_entryFromPath
- .text          0x0200767c      0xa28 /opt/devkitPro/libnds/lib/libnds9.a(console.o)
-                0x02007dac                con_write
-                0x0200767c                consoleGetDefault
-                0x02007b54                consoleSetFont
-                0x02007c00                consoleInit
-                0x02008074                nocash_write
-                0x02007730                consolePrintChar
-                0x02007ba0                consoleClear
-                0x02007b78                consoleSetWindow
-                0x02007684                consoleSelect
-                0x02007d70                consoleDemoInit
-                0x020078dc                consoleLoadFont
-                0x02007bb4                consoleDebugInit
- .text          0x020080a4       0xec /opt/devkitPro/libnds/lib/libnds9.a(initSystem.o)
-                0x020080a4                initSystem
- .text          0x02008190      0x134 /opt/devkitPro/libnds/lib/libnds9.a(keys.o)
-                0x02008250                keysSetRepeat
-                0x02008240                keysDownRepeat
-                0x0200828c                keysCurrent
-                0x02008220                keysHeld
-                0x02008274                keysUp
-                0x0200822c                keysDown
-                0x02008190                scanKeys
- .text          0x020082c4      0x484 /opt/devkitPro/libnds/lib/libnds9.a(sprite.o)
-                0x020082c4                oamDisable
-                0x0200834c                oamClear
-                0x02008578                oamRotateScale
-                0x02008318                oamGetGfxPtr
-                0x020082f4                oamEnable
-                0x02008374                oamGfxPtrToOffset
-                0x020085d8                oamUpdate
-                0x0200863c                oamInit
-                0x020083ac                oamSet
- .text          0x02008748      0x364 /opt/devkitPro/libnds/lib/libnds9.a(sprite_alloc.o)
-                0x02008784                oamCountFragments
-                0x02008748                resizeBuffer
-                0x020088c0                oamAllocReset
-                0x02008764                getAllocHeader
-                0x020088ac                oamFreeGfx
-                0x020088f8                simpleAlloc
-                0x02008a74                oamAllocateGfx
-                0x020087d0                simpleFree
- .text          0x02008aac       0xf4 /opt/devkitPro/libnds/lib/libnds9.a(system.o)
-                0x02008b5c                systemMsgHandler
-                0x02008af4                powerOn
-                0x02008b44                powerValueHandler
-                0x02008aac                ledBlink
-                0x02008b28                systemSleep
-                0x02008ac4                powerOff
- .text          0x02008ba0       0x4c /opt/devkitPro/libnds/lib/libnds9.a(touch.o)
-                0x02008ba0                touchRead
-                0x02008bc8                touchReadXY
- .text          0x02008bec      0x264 /opt/devkitPro/libnds/lib/libnds9.a(trig.o)
-                0x02008d84                arcSinComp
-                0x02008db4                asinLerp
-                0x02008d44                tanLerp
-                0x02008bec                sinLutLookup
-                0x02008cf8                tanLutLookup
-                0x02008cdc                cosLerp
-                0x02008e34                acosLerp
-                0x02008c3c                sinLerp
- .text          0x02008e50      0x144 /opt/devkitPro/libnds/lib/libnds9.a(video.o)
-                0x02008f04                vramSetBankF
-                0x02008e94                vramRestoreMainBanks
-                0x02008f2c                vramSetBankH
-                0x02008edc                vramSetBankD
-                0x02008ef0                vramSetBankE
-                0x02008f54                setBrightness
-                0x02008f18                vramSetBankG
-                0x02008eb4                vramSetBankB
-                0x02008ec8                vramSetBankC
-                0x02008f40                vramSetBankI
-                0x02008e50                vramSetMainBanks
-                0x02008ea0                vramSetBankA
- .text          0x02008f94      0xa94 /opt/devkitPro/libnds/lib/libnds9.a(videoGL.o)
-                0x020090dc                glTexCoord2f32
-                0x02009418                glTexImage2D
-                0x02009050                glGenTextures
-                0x02009020                glResetTextures
-                0x02009734                glRotatef32i
-                0x020093c0                glTexLoadPal
-                0x02009168                glTexParameter
-                0x02008f94                glGetGlobals
-                0x020091e8                getNextPaletteSlot
-                0x0200923c                vramGetBank
-                0x020091d8                alignVal
-                0x020091c0                glGetTexParameter
-                0x020093f4                gluTexLoadPal
-                0x02008f9c                glMaterialf
-                0x02009090                glBindTexture
-                0x02009198                glGetTexturePointer
-                0x020092fc                vramIsTextureBank
-                0x020090c0                glColorTable
-                0x0200935c                getNextTextureSlot
-                0x02009590                glInit_C
- .text          0x02009a28      0x26c /opt/devkitPro/libnds/lib/libnds9.a(dldi.o)
-                0x02009b98                dldiLoadFromFile
-                0x02009a94                dldiFree
-                0x02009a60                dldiIsValid
-                0x02009a28                dldiGetInternal
-                0x02009aa4                dldiFixDriverAddresses
- .text          0x02009c94     0x18b8 /opt/devkitPro/libnds/lib/libnds9.a(fifosystem.o)
-                0x0200ac30                fifoInternalRecvPopFirst
-                0x02009d1c                fifoCheckValue32
-                0x02009e2c                fifoCheckDatamsgLength
-                0x0200a624                fifoGetLostWordCount
-                0x0200a594                fifoGetBufferUsage
-                0x0200b2f4                fifoSendValue32
-                0x0200b204                fifoInternalSend
-                0x0200a2fc                fifoGetDatamsg
-                0x0200a114                fifoGetValue32
-                0x02009f2c                fifoGetAddress
-                0x02009ebc                fifoCountDatamsg
-                0x0200a264                fifoForceValue32Handler
-                0x02009da4                fifoCheckDatamsg
-                0x0200abd0                fifoInternalRecvPeek
-                0x0200b124                fifoInternalAllocFreeBlock
-                0x0200a0ec                fifoSetAddressHandler
-                0x0200ab90                fifoInternalProtect
-                0x0200a4d8                fifoForceDatamsgHandler
-                0x0200b038                fifoInternalSendEnqueue
-                0x0200b29c                fifoSendDatamsg
-                0x0200ae70                fifoInternalSendEmpty
-                0x0200afbc                fifoInternalSendInterrupt
-                0x0200b33c                fifoSendAddress
-                0x0200ae80                fifoInternalSendDeque
-                0x0200a630                fifoInternalRecvInterrupt
-                0x02009c94                fifoCheckAddress
-                0x0200b178                fifoInternalFreeCheck
-                0x0200ad04                fifoInternalRecvWordCount
-                0x0200ad84                fifoInternalRecvPushBack
-                0x0200abac                fifoInternalUnprotect
-                0x0200a07c                fifoForceAddressHandler
-                0x0200a2d4                fifoSetValue32Handler
-                0x0200af54                fifoInternalBeginSend
-                0x0200b378                fifoInit
-                0x0200a56c                fifoSetDatamsgHandler
-                0x0200b154                fifoInternalFreeBlock
- .text          0x0200b54c      0x1a8 /opt/devkitPro/libnds/lib/libnds9.a(interrupts.o)
-                0x0200b62c                irqEnable
-                0x0200b550                irqSet
-                0x0200b678                irqDisable
-                0x0200b5b0                irqInit
-                0x0200b54c                irqDummy
-                0x0200b5fc                irqInitHandler
-                0x0200b6c4                irqClear
- .text          0x0200b6f4       0x70 /opt/devkitPro/libnds/lib/libnds9.a(dcache.o)
-                0x0200b6f4                DC_FlushAll
-                0x0200b720                DC_FlushRange
-                0x0200b748                DC_InvalidateRange
-                0x0200b73c                DC_InvalidateAll
- *fill*         0x0200b764       0x1c ff
+ .text          0x02001118     0x23d8 Graphics.o
+                0x02001ff8                graphics_update_map
+                0x020030d8                graphics_dispName
+                0x020021dc                graphics_shift_sprite
+                0x020019ac                graphics_setupBG2_sub
+                0x0200349c                graphics_WelcomeFree
+                0x02002b3c                graphics_setSpriteVisibility
+                0x02003124                graphics_initWelcome
+                0x020029e8                graphics_drawRainbow
+                0x020012d4                graphics_init_sprite
+                0x02002cf0                graphics_drawNum
+                0x02001cbc                graphics_build
+                0x02003248                graphics_init_spriteWelcome
+                0x020025f8                graphics_game_over
+                0x02002af0                graphics_clearRainbow
+                0x02001bec                graphics_setupBG1_sub
+                0x02002f80                graphics_setConsole
+                0x020017d8                graphics_setup_BG0
+                0x02001118                graphics_init
+                0x0200219c                graphics_shift_main
+                0x02002444                graphics_jump
+                0x02002fe8                graphics_initKeyboard
+                0x02002990                graphics_clearPowerup
+                0x02001428                graphics_setup_BG2
+                0x02002c28                graphics_updatePoints
+                0x02002b54                graphics_toggleRainbow
+                0x020027d4                graphics_addPowerup
+                0x02002420                graphics_shift_back
+                0x02003390                graphics_animeWelcomeCat
+                0x020014cc                graphics_setup_BG1
+                0x02002b8c                graphics_drawNumber
+                0x0200248c                graphics_checkCollision
+                0x02002788                graphics_updateScreen
+ .text          0x020034f0       0x28 main.o
+                0x020034f0                main
+ .text          0x02003518      0x550 Score.o
+                0x02003964                Score_shifter
+                0x02003690                Score_printscoreboard
+                0x020039f4                Score_reset
+                0x02003594                Score_readFile
+                0x02003844                Score_insertResult
+                0x02003908                Score_increase
+                0x02003518                Score_writeFile
+                0x02003a5c                Score_init
+ .text          0x02003a68      0x310 Timer.o
+                0x02003a68                timer_setup
+                0x02003cac                timer_endBoost
+                0x02003d68                timer_welcomeEnd
+                0x02003bd0                timer_endSlowmo
+                0x02003b2c                timer_disable
+                0x02003c3c                timer_startBoost
+                0x02003d18                timer_welcomeAnimation
+                0x02003b48                timer_startSlowmo
+ .text          0x02003d78      0x204 /opt/devkitPro/libnds/lib/libfat.a(libfat.o)
+                0x02003db0                fatMount
+                0x02003d78                fatUnmount
+                0x02003f6c                fatMountSimple
+                0x02003f5c                fatInitDefault
+                0x02003e14                fatInit
+ *fill*         0x02003f7c        0x4 ff
+ .text          0x02003f80      0x340 /opt/devkitPro/libnds/lib/libfat.a(partition.o)
+                0x02003f80                _FAT_partition_getPartitionFromPath
+                0x02003f94                _FAT_partition_destructor
+                0x02003fbc                _FAT_partition_constructor
+ .text          0x020042c0      0x38c /opt/devkitPro/libnds/lib/libfat.a(cache.o)
+                0x02004394                _FAT_cache_flush
+                0x020044c0                _FAT_cache_writeLittleEndianValue
+                0x02004474                _FAT_cache_writePartialSector
+                0x020043ec                _FAT_cache_invalidate
+                0x020045b8                _FAT_cache_destructor
+                0x02004560                _FAT_cache_readLittleEndianValue
+                0x020045d4                _FAT_cache_constructor
+                0x02004528                _FAT_cache_readPartialSector
+                0x02004410                _FAT_cache_eraseWritePartialSector
+ .text          0x0200464c        0x0 /opt/devkitPro/libnds/lib/libfat.a(disc.o)
+ .text          0x0200464c      0x784 /opt/devkitPro/libnds/lib/libfat.a(fatdir.o)
+                0x02004700                _FAT_stat_r
+                0x02004668                _FAT_dirnext_r
+                0x02004c74                _FAT_unlink_r
+                0x02004a98                _FAT_rename_r
+                0x0200464c                _FAT_link_r
+                0x02004658                _FAT_dirclose_r
+                0x02004c18                _FAT_chdir_r
+                0x020046cc                _FAT_dirreset_r
+                0x02004780                _FAT_diropen_r
+                0x02004830                _FAT_statvfs_r
+                0x02004888                _FAT_mkdir_r
+ .text          0x02004dd0     0x10b8 /opt/devkitPro/libnds/lib/libfat.a(fatfile.o)
+                0x02004fc4                _FAT_ftruncate_r
+                0x020052d4                _FAT_write_r
+                0x02005110                _FAT_seek_r
+                0x0200572c                _FAT_read_r
+                0x02005a28                _FAT_syncToDisc
+                0x02005b90                _FAT_open_r
+                0x02005b08                _FAT_fsync_r
+                0x02005b30                _FAT_close_r
+                0x0200525c                _FAT_fstat_r
+ .text          0x02005e88      0x458 /opt/devkitPro/libnds/lib/libfat.a(file_allocation_table.o)
+                0x02005f78                _FAT_fat_freeClusterCount
+                0x02006100                _FAT_fat_clearLinks
+                0x02005e88                _FAT_fat_nextCluster
+                0x02006274                _FAT_fat_linkFreeClusterCleared
+                0x0200615c                _FAT_fat_trimChain
+                0x020061e4                _FAT_fat_linkFreeCluster
+                0x02005fa4                _FAT_fat_lastCluster
+ .text          0x020062e0       0xc8 /opt/devkitPro/libnds/lib/libfat.a(filetime.o)
+                0x02006318                _FAT_filetime_getDateFromRTC
+                0x020062e0                _FAT_filetime_to_time_t
+                0x02006360                _FAT_filetime_getTimeFromRTC
+ .text          0x020063a8     0x12dc /opt/devkitPro/libnds/lib/libfat.a(directory.o)
+                0x02007648                _FAT_directory_chdir
+                0x02006448                _FAT_directory_entryStat
+                0x02006684                _FAT_directory_removeEntry
+                0x02006508                _FAT_directory_getRootEntry
+                0x02006814                _FAT_directory_entryFromPosition
+                0x02006954                _FAT_directory_getNextEntry
+                0x02006b78                _FAT_directory_getFirstEntry
+                0x0200641c                _FAT_directory_entryGetCluster
+                0x02006c44                _FAT_directory_addEntry
+                0x0200746c                _FAT_directory_entryFromPath
+ .text          0x02007684      0xa28 /opt/devkitPro/libnds/lib/libnds9.a(console.o)
+                0x02007db4                con_write
+                0x02007684                consoleGetDefault
+                0x02007b5c                consoleSetFont
+                0x02007c08                consoleInit
+                0x0200807c                nocash_write
+                0x02007738                consolePrintChar
+                0x02007ba8                consoleClear
+                0x02007b80                consoleSetWindow
+                0x0200768c                consoleSelect
+                0x02007d78                consoleDemoInit
+                0x020078e4                consoleLoadFont
+                0x02007bbc                consoleDebugInit
+ .text          0x020080ac       0xec /opt/devkitPro/libnds/lib/libnds9.a(initSystem.o)
+                0x020080ac                initSystem
+ .text          0x02008198      0x134 /opt/devkitPro/libnds/lib/libnds9.a(keys.o)
+                0x02008258                keysSetRepeat
+                0x02008248                keysDownRepeat
+                0x02008294                keysCurrent
+                0x02008228                keysHeld
+                0x0200827c                keysUp
+                0x02008234                keysDown
+                0x02008198                scanKeys
+ .text          0x020082cc      0x484 /opt/devkitPro/libnds/lib/libnds9.a(sprite.o)
+                0x020082cc                oamDisable
+                0x02008354                oamClear
+                0x02008580                oamRotateScale
+                0x02008320                oamGetGfxPtr
+                0x020082fc                oamEnable
+                0x0200837c                oamGfxPtrToOffset
+                0x020085e0                oamUpdate
+                0x02008644                oamInit
+                0x020083b4                oamSet
+ .text          0x02008750      0x364 /opt/devkitPro/libnds/lib/libnds9.a(sprite_alloc.o)
+                0x0200878c                oamCountFragments
+                0x02008750                resizeBuffer
+                0x020088c8                oamAllocReset
+                0x0200876c                getAllocHeader
+                0x020088b4                oamFreeGfx
+                0x02008900                simpleAlloc
+                0x02008a7c                oamAllocateGfx
+                0x020087d8                simpleFree
+ .text          0x02008ab4       0xf4 /opt/devkitPro/libnds/lib/libnds9.a(system.o)
+                0x02008b64                systemMsgHandler
+                0x02008afc                powerOn
+                0x02008b4c                powerValueHandler
+                0x02008ab4                ledBlink
+                0x02008b30                systemSleep
+                0x02008acc                powerOff
+ .text          0x02008ba8       0x4c /opt/devkitPro/libnds/lib/libnds9.a(touch.o)
+                0x02008ba8                touchRead
+                0x02008bd0                touchReadXY
+ .text          0x02008bf4      0x264 /opt/devkitPro/libnds/lib/libnds9.a(trig.o)
+                0x02008d8c                arcSinComp
+                0x02008dbc                asinLerp
+                0x02008d4c                tanLerp
+                0x02008bf4                sinLutLookup
+                0x02008d00                tanLutLookup
+                0x02008ce4                cosLerp
+                0x02008e3c                acosLerp
+                0x02008c44                sinLerp
+ .text          0x02008e58      0x144 /opt/devkitPro/libnds/lib/libnds9.a(video.o)
+                0x02008f0c                vramSetBankF
+                0x02008e9c                vramRestoreMainBanks
+                0x02008f34                vramSetBankH
+                0x02008ee4                vramSetBankD
+                0x02008ef8                vramSetBankE
+                0x02008f5c                setBrightness
+                0x02008f20                vramSetBankG
+                0x02008ebc                vramSetBankB
+                0x02008ed0                vramSetBankC
+                0x02008f48                vramSetBankI
+                0x02008e58                vramSetMainBanks
+                0x02008ea8                vramSetBankA
+ .text          0x02008f9c      0xa94 /opt/devkitPro/libnds/lib/libnds9.a(videoGL.o)
+                0x020090e4                glTexCoord2f32
+                0x02009420                glTexImage2D
+                0x02009058                glGenTextures
+                0x02009028                glResetTextures
+                0x0200973c                glRotatef32i
+                0x020093c8                glTexLoadPal
+                0x02009170                glTexParameter
+                0x02008f9c                glGetGlobals
+                0x020091f0                getNextPaletteSlot
+                0x02009244                vramGetBank
+                0x020091e0                alignVal
+                0x020091c8                glGetTexParameter
+                0x020093fc                gluTexLoadPal
+                0x02008fa4                glMaterialf
+                0x02009098                glBindTexture
+                0x020091a0                glGetTexturePointer
+                0x02009304                vramIsTextureBank
+                0x020090c8                glColorTable
+                0x02009364                getNextTextureSlot
+                0x02009598                glInit_C
+ .text          0x02009a30      0x26c /opt/devkitPro/libnds/lib/libnds9.a(dldi.o)
+                0x02009ba0                dldiLoadFromFile
+                0x02009a9c                dldiFree
+                0x02009a68                dldiIsValid
+                0x02009a30                dldiGetInternal
+                0x02009aac                dldiFixDriverAddresses
+ .text          0x02009c9c     0x18b8 /opt/devkitPro/libnds/lib/libnds9.a(fifosystem.o)
+                0x0200ac38                fifoInternalRecvPopFirst
+                0x02009d24                fifoCheckValue32
+                0x02009e34                fifoCheckDatamsgLength
+                0x0200a62c                fifoGetLostWordCount
+                0x0200a59c                fifoGetBufferUsage
+                0x0200b2fc                fifoSendValue32
+                0x0200b20c                fifoInternalSend
+                0x0200a304                fifoGetDatamsg
+                0x0200a11c                fifoGetValue32
+                0x02009f34                fifoGetAddress
+                0x02009ec4                fifoCountDatamsg
+                0x0200a26c                fifoForceValue32Handler
+                0x02009dac                fifoCheckDatamsg
+                0x0200abd8                fifoInternalRecvPeek
+                0x0200b12c                fifoInternalAllocFreeBlock
+                0x0200a0f4                fifoSetAddressHandler
+                0x0200ab98                fifoInternalProtect
+                0x0200a4e0                fifoForceDatamsgHandler
+                0x0200b040                fifoInternalSendEnqueue
+                0x0200b2a4                fifoSendDatamsg
+                0x0200ae78                fifoInternalSendEmpty
+                0x0200afc4                fifoInternalSendInterrupt
+                0x0200b344                fifoSendAddress
+                0x0200ae88                fifoInternalSendDeque
+                0x0200a638                fifoInternalRecvInterrupt
+                0x02009c9c                fifoCheckAddress
+                0x0200b180                fifoInternalFreeCheck
+                0x0200ad0c                fifoInternalRecvWordCount
+                0x0200ad8c                fifoInternalRecvPushBack
+                0x0200abb4                fifoInternalUnprotect
+                0x0200a084                fifoForceAddressHandler
+                0x0200a2dc                fifoSetValue32Handler
+                0x0200af5c                fifoInternalBeginSend
+                0x0200b380                fifoInit
+                0x0200a574                fifoSetDatamsgHandler
+                0x0200b15c                fifoInternalFreeBlock
+ .text          0x0200b554      0x1a8 /opt/devkitPro/libnds/lib/libnds9.a(interrupts.o)
+                0x0200b634                irqEnable
+                0x0200b558                irqSet
+                0x0200b680                irqDisable
+                0x0200b5b8                irqInit
+                0x0200b554                irqDummy
+                0x0200b604                irqInitHandler
+                0x0200b6cc                irqClear
+ .text          0x0200b6fc       0x70 /opt/devkitPro/libnds/lib/libnds9.a(dcache.o)
+                0x0200b6fc                DC_FlushAll
+                0x0200b728                DC_FlushRange
+                0x0200b750                DC_InvalidateRange
+                0x0200b744                DC_InvalidateAll
+ *fill*         0x0200b76c       0x14 ff
  .text          0x0200b780     0x8000 /opt/devkitPro/libnds/lib/libnds9.a(dldi_stub.o)
                 0x0200b780                _io_dldi_stub
  .text          0x02013780       0x70 /opt/devkitPro/libnds/lib/libnds9.a(biosCalls.o)
@@ -3121,44 +3121,44 @@ Linker script and memory map
  .debug_abbrev  0x00003b23      0x22a /opt/devkitPro/libnds/lib/libnds9.a(background.o)
  .debug_abbrev  0x00003d4d       0x12 /opt/devkitPro/devkitARM/lib/gcc/arm-eabi/4.3.3/thumb/crtn.o
 
-.debug_line     0x00000000     0x6dd9
+.debug_line     0x00000000     0x6ddb
  *(.debug_line)
  .debug_line    0x00000000       0x49 /opt/devkitPro/devkitARM/lib/gcc/arm-eabi/4.3.3/thumb/crti.o
  .debug_line    0x00000049      0x1d3 Audio.o
- .debug_line    0x0000021c      0x2a4 game.o
- .debug_line    0x000004c0      0x55b Graphics.o
- .debug_line    0x00000a1b      0x148 main.o
- .debug_line    0x00000b63      0x274 Score.o
- .debug_line    0x00000dd7      0x189 Timer.o
- .debug_line    0x00000f60      0x426 /opt/devkitPro/libnds/lib/libfat.a(libfat.o)
- .debug_line    0x00001386      0x43b /opt/devkitPro/libnds/lib/libfat.a(partition.o)
- .debug_line    0x000017c1      0x307 /opt/devkitPro/libnds/lib/libfat.a(cache.o)
- .debug_line    0x00001ac8      0x13e /opt/devkitPro/libnds/lib/libfat.a(disc.o)
- .debug_line    0x00001c06      0x5c1 /opt/devkitPro/libnds/lib/libfat.a(fatdir.o)
- .debug_line    0x000021c7      0x8a8 /opt/devkitPro/libnds/lib/libfat.a(fatfile.o)
- .debug_line    0x00002a6f      0x2a4 /opt/devkitPro/libnds/lib/libfat.a(file_allocation_table.o)
- .debug_line    0x00002d13      0x1c4 /opt/devkitPro/libnds/lib/libfat.a(filetime.o)
- .debug_line    0x00002ed7      0x831 /opt/devkitPro/libnds/lib/libfat.a(directory.o)
- .debug_line    0x00003708      0x751 /opt/devkitPro/libnds/lib/libnds9.a(console.o)
- .debug_line    0x00003e59      0x31e /opt/devkitPro/libnds/lib/libnds9.a(initSystem.o)
- .debug_line    0x00004177      0x2ec /opt/devkitPro/libnds/lib/libnds9.a(keys.o)
- .debug_line    0x00004463      0x2dc /opt/devkitPro/libnds/lib/libnds9.a(sprite.o)
- .debug_line    0x0000473f      0x2cd /opt/devkitPro/libnds/lib/libnds9.a(sprite_alloc.o)
- .debug_line    0x00004a0c      0x2d1 /opt/devkitPro/libnds/lib/libnds9.a(system.o)
- .debug_line    0x00004cdd      0x27e /opt/devkitPro/libnds/lib/libnds9.a(touch.o)
- .debug_line    0x00004f5b      0x1dd /opt/devkitPro/libnds/lib/libnds9.a(trig.o)
- .debug_line    0x00005138      0x200 /opt/devkitPro/libnds/lib/libnds9.a(video.o)
- .debug_line    0x00005338      0x595 /opt/devkitPro/libnds/lib/libnds9.a(videoGL.o)
- .debug_line    0x000058cd      0x359 /opt/devkitPro/libnds/lib/libnds9.a(dldi.o)
- .debug_line    0x00005c26      0x936 /opt/devkitPro/libnds/lib/libnds9.a(fifosystem.o)
- .debug_line    0x0000655c      0x1d9 /opt/devkitPro/libnds/lib/libnds9.a(interrupts.o)
- .debug_line    0x00006735       0xa6 /opt/devkitPro/libnds/lib/libnds9.a(dcache.o)
- .debug_line    0x000067db       0x8f /opt/devkitPro/libnds/lib/libnds9.a(dldi_stub.o)
- .debug_line    0x0000686a       0xc5 /opt/devkitPro/libnds/lib/libnds9.a(biosCalls.o)
- .debug_line    0x0000692f       0x98 /opt/devkitPro/libnds/lib/libnds9.a(debugprint.o)
- .debug_line    0x000069c7       0xc3 /opt/devkitPro/libnds/lib/libnds9.a(interruptDispatcher.o)
- .debug_line    0x00006a8a      0x2d0 /opt/devkitPro/libnds/lib/libnds9.a(background.o)
- .debug_line    0x00006d5a       0x7f /opt/devkitPro/devkitARM/lib/gcc/arm-eabi/4.3.3/thumb/crtn.o
+ .debug_line    0x0000021c      0x2a6 game.o
+ .debug_line    0x000004c2      0x55b Graphics.o
+ .debug_line    0x00000a1d      0x148 main.o
+ .debug_line    0x00000b65      0x274 Score.o
+ .debug_line    0x00000dd9      0x189 Timer.o
+ .debug_line    0x00000f62      0x426 /opt/devkitPro/libnds/lib/libfat.a(libfat.o)
+ .debug_line    0x00001388      0x43b /opt/devkitPro/libnds/lib/libfat.a(partition.o)
+ .debug_line    0x000017c3      0x307 /opt/devkitPro/libnds/lib/libfat.a(cache.o)
+ .debug_line    0x00001aca      0x13e /opt/devkitPro/libnds/lib/libfat.a(disc.o)
+ .debug_line    0x00001c08      0x5c1 /opt/devkitPro/libnds/lib/libfat.a(fatdir.o)
+ .debug_line    0x000021c9      0x8a8 /opt/devkitPro/libnds/lib/libfat.a(fatfile.o)
+ .debug_line    0x00002a71      0x2a4 /opt/devkitPro/libnds/lib/libfat.a(file_allocation_table.o)
+ .debug_line    0x00002d15      0x1c4 /opt/devkitPro/libnds/lib/libfat.a(filetime.o)
+ .debug_line    0x00002ed9      0x831 /opt/devkitPro/libnds/lib/libfat.a(directory.o)
+ .debug_line    0x0000370a      0x751 /opt/devkitPro/libnds/lib/libnds9.a(console.o)
+ .debug_line    0x00003e5b      0x31e /opt/devkitPro/libnds/lib/libnds9.a(initSystem.o)
+ .debug_line    0x00004179      0x2ec /opt/devkitPro/libnds/lib/libnds9.a(keys.o)
+ .debug_line    0x00004465      0x2dc /opt/devkitPro/libnds/lib/libnds9.a(sprite.o)
+ .debug_line    0x00004741      0x2cd /opt/devkitPro/libnds/lib/libnds9.a(sprite_alloc.o)
+ .debug_line    0x00004a0e      0x2d1 /opt/devkitPro/libnds/lib/libnds9.a(system.o)
+ .debug_line    0x00004cdf      0x27e /opt/devkitPro/libnds/lib/libnds9.a(touch.o)
+ .debug_line    0x00004f5d      0x1dd /opt/devkitPro/libnds/lib/libnds9.a(trig.o)
+ .debug_line    0x0000513a      0x200 /opt/devkitPro/libnds/lib/libnds9.a(video.o)
+ .debug_line    0x0000533a      0x595 /opt/devkitPro/libnds/lib/libnds9.a(videoGL.o)
+ .debug_line    0x000058cf      0x359 /opt/devkitPro/libnds/lib/libnds9.a(dldi.o)
+ .debug_line    0x00005c28      0x936 /opt/devkitPro/libnds/lib/libnds9.a(fifosystem.o)
+ .debug_line    0x0000655e      0x1d9 /opt/devkitPro/libnds/lib/libnds9.a(interrupts.o)
+ .debug_line    0x00006737       0xa6 /opt/devkitPro/libnds/lib/libnds9.a(dcache.o)
+ .debug_line    0x000067dd       0x8f /opt/devkitPro/libnds/lib/libnds9.a(dldi_stub.o)
+ .debug_line    0x0000686c       0xc5 /opt/devkitPro/libnds/lib/libnds9.a(biosCalls.o)
+ .debug_line    0x00006931       0x98 /opt/devkitPro/libnds/lib/libnds9.a(debugprint.o)
+ .debug_line    0x000069c9       0xc3 /opt/devkitPro/libnds/lib/libnds9.a(interruptDispatcher.o)
+ .debug_line    0x00006a8c      0x2d0 /opt/devkitPro/libnds/lib/libnds9.a(background.o)
+ .debug_line    0x00006d5c       0x7f /opt/devkitPro/devkitARM/lib/gcc/arm-eabi/4.3.3/thumb/crtn.o
 
 .debug_frame    0x00000000     0x2064
  *(.debug_frame)

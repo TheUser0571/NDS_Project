@@ -431,6 +431,8 @@ void game_welcomeScreen(void){
 	graphics_initWelcome();
 	graphics_init_spriteWelcome();
 	timer_welcomeAnimation(&graphics_animeWelcomeCat);
+	Audio_Init();
+	Audio_PlayMusic();
 	while(1){
 		//checking input
 		scanKeys();
